@@ -1,0 +1,74 @@
+
+:host {
+    display: block;
+    background: #fff url("/assets/images/background/background2.jpg") no-repeat center center fixed;
+    background-size: cover;
+    height: 100%;
+    width: 100%;
+
+  }
+  #row
+  {
+    display: flex;
+    align-items: center;
+  }
+  .register {
+    background: white;
+    width: 380px;
+    margin: 0 auto;
+  }
+  .register .register-header {
+    background: #4b9831;
+    padding: 24px;
+    font-size: 24px;
+    font-weight: 400;
+  }
+  .register .register-content {
+    padding: 24px 42px 42px;
+  }
+  .register .register-content mat-form-field {
+    width: 100%;
+    margin: 6px 0;
+  }
+  .register .register-content .extra-options {
+    margin: 16px 0 32px;
+  }
+  .register .register-content .extra-options .remember-me {
+    color: #777;
+  }
+  .register .register-content a {
+    text-decoration: none;
+    color: #4b9831;
+  }
+  .register .register-content a:hover {
+    text-decoration: underline;
+  }
+  .register .register-content .note {
+    color: #777;
+    margin: 24px 0 0;
+    text-align: center;
+  }
+
+  #register_button
+  {
+      width:300px;
+  }
+
+  #message{
+    text-align: center;
+  }
+
+  .logo_container
+  {
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    top: -30px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 200px;
+    height: 200px;
+    z-index: 12;
+    opacity: 0.9;
+  }

@@ -1,0 +1,37 @@
+
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav
+    #drawer
+    class="sidenav"
+    fixedInViewport="true">
+    <mat-toolbar class="toolbar">Menu</mat-toolbar>
+    <mat-nav-list class="navigation">
+      
+      <a mat-list-item class = "item" href="home/"><i class="nav-icon material-icons ng-scope">home</i> Home</a>
+      <a mat-list-item class = "item" href="table/"><i class="nav-icon material-icons ng-scope">list</i> Serwisy</a>
+      <a mat-list-item class = "item" href="profile/"><i class="nav-icon material-icons ng-scope">fingerprint</i> Mój profil</a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content class="sidenav-content">
+    <mat-toolbar class = "lefttoolbar">
+      <button class = "item"
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.open()">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span class = "item">Design panel</span>
+
+    <span class="fill-space"></span>
+
+    <button class="logout" type="button" ng-transclude="" aria-label="menu" ng-click="$mdOpenMenu($event)" aria-haspopup="true" aria-expanded="false" aria-owns="menu_container_4">
+      <i class="material-icons ng-scope">face</i>
+      <div class="md-ripple-container" style></div></button>
+
+      <button  mat-button (click)="logout()">Wyloguj</button>
+
+    </mat-toolbar>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

@@ -1,0 +1,23 @@
+
+<div class="logo_container">
+    <img src="../../../assets/images/logo/logo.png"/>
+  </div>
+<div fxLayout="row" id="row" fxLayoutAlign="center center" style="height: 100%;">
+    <div class="register mat-elevation-z12">
+      <div class="register-header" fxLayout="column" fxLayoutAlign="center center">
+          <i class="material-icons" style="font-size:30px;vertical-align: bottom;">check</i>&nbsp;&nbsp;Zarejestrowano
+      </div>
+      <form #form="ngForm" (ngSubmit)="register()">
+        <div class="register-content" fxLayout="column" fxLayoutAlign="start stretch">
+        <div id="message">
+            <p> <i class="material-icons" style="font-size:50px;vertical-align: bottom;">email</i>
+            </p>
+            Na adres {{fieldEmail}} została wysłana wiadomość email. W celu potwierdzenia rejestracji proszę kliknąć w link aktywacyjny.
+        </div>
+    
+          
+          <p class="note">Możesz zamknąć tą stronę lub <br/> <a [routerLink]="['/login']">przejść do strony logowania</a></p>
+        </div>
+      </form>
+    </div>
+  </div>
