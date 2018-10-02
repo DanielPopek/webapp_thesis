@@ -19,16 +19,13 @@ import { appRoutes } from './routes';
 import { AuthGuard } from './auth/auth.guard';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { UserService } from "src/app/shared/services/user.service";
+import { CommunicationService } from "src/app/shared/services/communication.service";
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { HomeComponent } from './home/home.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule, MatTableModule, MatPaginatorModule, MatSortModule } from '@angular/material';
 import { MenuComponent } from './menu/menu.component';
-import { D3testComponent } from './d3test/d3test.component';
-import { TestPanelComponent } from './test-panel/test-panel.component';
-import { PanelComponent } from './panel/panel.component';
 import { DesignPanelComponent } from './design-panel/design-panel.component';
-import { DesignComponent } from './design/design.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { BaseLayoutComponent, BaseLayoutModule } from './shared/layouts';
 
@@ -41,10 +38,6 @@ import { BaseLayoutComponent, BaseLayoutModule } from './shared/layouts';
     SignUpConfirmComponent,
     HomeComponent,
     MenuComponent,
-    D3testComponent,
-    PanelComponent,
-    TestPanelComponent,
-    DesignComponent,
     DesignPanelComponent
   ],
   imports: [
@@ -71,7 +64,7 @@ import { BaseLayoutComponent, BaseLayoutModule } from './shared/layouts';
   exports: [
     FlexLayoutModule
   ],
-  providers: [UserService, AuthGuard,
+  providers: [UserService,CommunicationService, AuthGuard,
 
     {
       provide: HTTP_INTERCEPTORS,

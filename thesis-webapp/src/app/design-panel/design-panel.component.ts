@@ -3,197 +3,17 @@ import { Component, Injectable, ViewChild,OnInit  } from '@angular/core';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { BehaviorSubject } from 'rxjs';
 import * as d3 from 'd3';
-
-
-export class Event
-{
-  name:string;
-  message:string;
-}
-
-export class Intent
-{
-  id: number;
-  parentId: number;
-  level: number;
-  name:string;
-  answers:string[];
-  trainingSamples:string[];
-  event:Event;
-  children:Intent[];
-}
-
-
-const TREE_DATA = {
-  Location: {
-    level1_sl1: {
-      level2_sl1: {
-        compiler: 'ts',
-        core: 'ts'
-      }
-    },
-    level1_sl2: {
-      level2_sl1: {
-        button: 'ts',
-        checkbox: 'ts',
-        input: 'ts'
-      }
-    }
-  }
-}
-
-
-
-//////////////
-
-
-@Injectable()
-export class IntentStorage {
-
-  dataChange = new BehaviorSubject<Intent[]>([]);
-
-  get data(): Intent[] { return this.dataChange.value; }
-
-  parentNodeMap = new Map<Intent, Intent>();
-
-  constructor() {
-    this.initialize();
-  }
-
-
-
-  treeData = [{ "id": 0, "level": 0, "name": "root", "parentId": null, "event":null, "answers":["answer1","answer2","answer3"],"trainingSamples":["train1","train2"], "children": [{ "id": 1.1, "level": 1, "name": "child1", "parentId": 0, "event":null, "answers":["answer1","answer2","answer3"],"trainingSamples":["train1","train2"], "children": [] }] }] as Intent[];
-  initialize() {
-    // Parse the string to json object.
-    const dataObject = TREE_DATA;
-    const fakeDataObjecct = { Location: {} }
-
-    // Build the tree nodes from Json object. The result is a list of `FileNode` with nested
-    //     file node as children.
-    // input as array
-
-    //const data = this.buildFileTree(fakeDataObjecct, 0);
-    const data = this.treeData;
-    console.log(this.data);
-
-    //this.populateParentMap(this.treeData);
-
-    // Notify the change.
-    this.dataChange.next(data);
-  }
-
-
-  /**
-   * Build the file structure tree. The `value` is the Json object, or a sub-tree of a Json object.
-   * The return value is the list of `FileNode`.
-   */
-  buildFileTree(obj: object, level: number): Intent[] {
-    // @pankaj This should recive Root node of Tree of Type FileNode
-    // so we dont have to create a new node and use it as it is
-    //console.log(obj);
-    return Object.keys(obj).reduce<Intent[]>((accumulator, key) => {
-      // console.log(key);
-      const value = obj[key];
-      const node = new Intent();
-      node.id = level;
-
-      node.level = level;
-      node.name = key;
-      node.parentId = null;
-      if (value != null) {
-        if (typeof value === 'object') {
-          node.children = this.buildFileTree(value, level + 1);
-        } else {
-         // node.type = value;
-        }
-      }
-
-      return accumulator.concat(node);
-    }, []);
-  }
-
-  /** Add an item Tree node */
-  public insertItem(parent: Intent, name: string) {
-    if (parent.children) {
-      //console.log("insert ")
-
-      //if (parent.type !== 'SECTION') {
-        let newNode: Intent;
-        newNode = new Intent();
-        newNode.name = name;
-        newNode.children = [];
-        newNode.answers=[];
-        newNode.trainingSamples=[];
-        newNode.level = parent.level + 1;
-        console.log(newNode.level);
-        newNode.parentId = parent.id;
-        newNode.id = newNode.level + ((parent.children.length + 1) / 10.0);
-
-
-        console.log(parent.children.length);
-        console.log(newNode.id);
-
-        parent.children.push(newNode);
-        this.parentNodeMap.set(newNode, parent);
-        //console.log(newNode);
-
-      //} else {
-        console.log("No More Nodes can be inserted");
-      //}
-      //this.dataChange.next(this.data);
-    }
-
-  }
-  public removeItem(currentNode: Intent, root: Intent) {
-    //const parentNode = this.parentNodeMap.get(currentNode);
-    const parentNode = this.findParent(currentNode.parentId, root);
-    console.log("parentNode " + JSON.stringify(parentNode))
-    const index = parentNode.children.indexOf(currentNode);
-    if (index !== -1) {
-      parentNode.children.splice(index, 1);
-      this.dataChange.next(this.data);
-      this.parentNodeMap.delete(currentNode);
-    }
-    console.log("currentNode" + index);
-
-  }
-  updateItem(node: Intent, name: string) {
-    node.name = name;
-    this.dataChange.next(this.data);
-  }
-  public findParent(id: number, node: any): any {
-
-    console.log("id " + id + " node" + node.id);
-    if (node != undefined && node.id === id) {
-      return node;
-    } else {
-      console.log("ELSE " + JSON.stringify(node.children));
-      for (let element in node.children) {
-        console.log("Recursive " + JSON.stringify(node.children[element].children));
-        if (node.children[element].children != undefined && node.children[element].children.length > 0) {
-          return this.findParent(id, node.children[element]);
-        } else {
-          continue;
-        }
-
-
-      }
-
-    }
-
-
-  }
-
-}
-
-///////////////////COMPONENT START 
+import { IntentStorage } from "src/app/shared/storage/intent.storage";
+import { Intent } from "src/app/shared/model/inner/intent.model";
+import { CommunicationService } from "src/app/shared/services/communication.service";
+import { IntentDTO } from "src/app/shared/model/DTO/intent.dto.model";
 
 
 @Component({
   selector: 'app-design-panel',
   templateUrl: './design-panel.component.html',
   styleUrls: ['./design-panel.component.css'],
-  providers: [IntentStorage]
+  providers: [IntentStorage,CommunicationService]
 })
 export class DesignPanelComponent implements OnInit {
 
@@ -223,26 +43,43 @@ export class DesignPanelComponent implements OnInit {
   //for D3 js purposes 
   
   
-    constructor(public database: IntentStorage) {
+    constructor(public database: IntentStorage, private communicationService: CommunicationService) {
       this.nestedTreeControl = new NestedTreeControl<Intent>(this._getChildren);
       this.nestedDataSource = new MatTreeNestedDataSource();
       database.dataChange.subscribe(data => this.nestedDataSource.data = data);
     }
 
     ngOnInit() {
-      this.loadTreeDiagram();
+      this.communicationService.getIntentByCommunicationHash("Xi9WKcTUGxPof3q5OZyl6R0FDwMwCvw6tester").subscribe((data: IntentDTO) => {
+        console.log(data)
+        console.log(this.database.convertDTOtoIntent(data));
+        this.database.readData(this.database.convertDTOtoIntent(data));
+        this.loadTreeDiagram();
+      });
     }
-  
-    //hasNestedChild = (_: number, nodeData: Intent) => !nodeData.type;
-  
+
+    saveConversation()
+    {
+      this.communicationService.saveRootIntentByConversationHash("Xi9WKcTUGxPof3q5OZyl6R0FDwMwCvw6tester",this.database.getStorageAsDTO()).subscribe((data) => {
+        console.log(data)
+      });
+    }
+
+
     private _getChildren = (node: Intent) => node.children;
-    /** Select the category so we can insert the new item. */
+
+
+    //TODO -IMPORVE UPDATE !!!
+    test()
+    {
+      // this.database.inform();
+      // this.loadTreeDiagram();
+      // alert("changed");
+    }
+
     addNewItem(node: Intent) {
       this.database.insertItem(node, 'new item');
-      //this.tree.renderNodeChanges(this.database.data);
       this.nestedTreeControl.expand(node);
-      //console.log(this.nestedTreeControl);
-  
       this.renderChanges()
       this.getTree();
       this.loadTreeDiagram();
@@ -302,8 +139,23 @@ export class DesignPanelComponent implements OnInit {
       }
     }
 
-    //D3////////////////////////
-    ///D3 JS methods
+    addEvent(node:Intent, newEvent: string) {
+      if (newEvent&&!node.events.includes(newEvent)) {
+        node.events.push(newEvent);
+      }
+    }
+
+    removeEvent(node:Intent, toRemove: string) {
+     for (var i=node.events.length-1; i>=0; i--) {
+      if (node.events[i] === toRemove) {
+        node.events.splice(i, 1);
+           break; 
+        }
+      }
+    }
+
+    ///D3////////////////////////
+    ///D3JS methods
 
     loadTreeDiagram()
     {

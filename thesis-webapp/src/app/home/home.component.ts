@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MaterialAppModule } from "src/app/ngmaterial.module";
-import { Supervisor } from "src/app/shared/model/supervisor.model";
 
 
 @NgModule({
@@ -29,7 +28,7 @@ import { Supervisor } from "src/app/shared/model/supervisor.model";
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-supervisor:Supervisor= new Supervisor();
+// supervisor:Supervisor= new Supervisor();
 
   // constructor() { }
   constructor(private router: Router){}
