@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import {TreeDiagram} from 'node_modules/angular2-tree-diagram';
 
 
 import { AppComponent } from './app.component';
@@ -23,6 +24,11 @@ import { HomeComponent } from './home/home.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule, MatTableModule, MatPaginatorModule, MatSortModule } from '@angular/material';
 import { MenuComponent } from './menu/menu.component';
+import { D3testComponent } from './d3test/d3test.component';
+import { TestPanelComponent } from './test-panel/test-panel.component';
+import { PanelComponent } from './panel/panel.component';
+import { DesignPanelComponent } from './design-panel/design-panel.component';
+import { DesignComponent } from './design/design.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { BaseLayoutComponent, BaseLayoutModule } from './shared/layouts';
 
@@ -34,7 +40,12 @@ import { BaseLayoutComponent, BaseLayoutModule } from './shared/layouts';
     SignInComponent,
     SignUpConfirmComponent,
     HomeComponent,
-    MenuComponent
+    MenuComponent,
+    D3testComponent,
+    PanelComponent,
+    TestPanelComponent,
+    DesignComponent,
+    DesignPanelComponent
   ],
   imports: [
     BrowserModule, BrowserAnimationsModule, MaterialAppModule,
@@ -54,7 +65,8 @@ import { BaseLayoutComponent, BaseLayoutModule } from './shared/layouts';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
-    BaseLayoutModule
+    BaseLayoutModule,
+    TreeDiagram
   ],
   exports: [
     FlexLayoutModule

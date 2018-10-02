@@ -16,5 +16,18 @@
       "es2017",
       "dom"
     ]
-  }
+  },
+  "include": [
+    "src/**/*",
+    "node_modules/angular2-tree-diagram/tree.module.ts",
+    "node_modules/angular2-tree-diagram/index.ts",
+    "node_modules/angular2-tree-diagram/node/index.ts",
+    "node_modules/angular2-tree-diagram/services/nodesList.service.ts",
+    "node_modules/angular2-tree-diagram/tree.component.ts",
+    "node_modules/angular2-tree-diagram/classes/nodesList.class.ts",
+    "node_modules/angular2-tree-diagram/node/node.component.ts",
+    "node_modules/angular2-tree-diagram/classes/node-maker.class.ts",
+    "node_modules/angular2-tree-diagram/classes/node.class.ts"
+    // "node_modules/angular2-tree-diagram/*"
+  ]
 }

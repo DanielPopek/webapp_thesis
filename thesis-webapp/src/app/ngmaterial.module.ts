@@ -23,6 +23,7 @@ import {  MatButtonModule,
   MatTooltipModule,
   MatRadioModule,
   MatInputModule,
+  MatTreeModule,
   MatRippleModule } from '@angular/material';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import {MatTabsModule} from '@angular/material/tabs';
@@ -53,10 +54,12 @@ import {MatTabsModule} from '@angular/material/tabs';
     MatTooltipModule,
     MatRadioModule,
     MatInputModule,
+    MatTreeModule,
     MatRippleModule],
   exports: [MatButtonModule,MatToolbarModule,MatTabsModule,
     MatSelectModule,
     MatAutocompleteModule,
+    MatTreeModule,
     MatCardModule,
     MatCheckboxModule,
     MatDatepickerModule,
