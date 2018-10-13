@@ -7,6 +7,8 @@ import { IntentStorage } from "src/app/shared/storage/intent.storage";
 import { Intent } from "src/app/shared/model/inner/intent.model";
 import { CommunicationService } from "src/app/shared/services/communication.service";
 import { IntentDTO } from "src/app/shared/model/DTO/intent.dto.model";
+import { Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 
 
 @Component({
@@ -17,7 +19,8 @@ import { IntentDTO } from "src/app/shared/model/DTO/intent.dto.model";
 })
 export class DesignPanelComponent implements OnInit {
 
-
+   TEMP_CONV_ID:string='Xi9WKcTUGxPof3q5OZyl6R0FDwMwCvw6test'; 
+   hash;
 
   @ViewChild('treeSelector') tree: any;
   
@@ -43,14 +46,19 @@ export class DesignPanelComponent implements OnInit {
   //for D3 js purposes 
   
   
-    constructor(public database: IntentStorage, private communicationService: CommunicationService) {
+    constructor(public database: IntentStorage, private communicationService: CommunicationService,  private router: Router,
+      private route: ActivatedRoute,) {
       this.nestedTreeControl = new NestedTreeControl<Intent>(this._getChildren);
       this.nestedDataSource = new MatTreeNestedDataSource();
       database.dataChange.subscribe(data => this.nestedDataSource.data = data);
     }
 
     ngOnInit() {
-      this.communicationService.getIntentByCommunicationHash("Xi9WKcTUGxPof3q5OZyl6R0FDwMwCvw6tester").subscribe((data: IntentDTO) => {
+
+      this.hash = this.route.snapshot.paramMap.get('conversationHash');
+      console.log(this.hash);
+
+      this.communicationService.getIntentByCommunicationHash(this.hash).subscribe((data: IntentDTO) => {
         console.log(data)
         console.log(this.database.convertDTOtoIntent(data));
         this.database.readData(this.database.convertDTOtoIntent(data));
@@ -60,9 +68,13 @@ export class DesignPanelComponent implements OnInit {
 
     saveConversation()
     {
-      this.communicationService.saveRootIntentByConversationHash("Xi9WKcTUGxPof3q5OZyl6R0FDwMwCvw6tester",this.database.getStorageAsDTO()).subscribe((data) => {
+      this.communicationService.saveRootIntentByConversationHash(this.hash,this.database.getStorageAsDTO()).subscribe((data) => {
         console.log(data)
       });
+    }
+
+    toConversations(){
+      this.router.navigate(['/conversation']);
     }
 
 
@@ -166,8 +178,8 @@ export class DesignPanelComponent implements OnInit {
 
     setData() {
       this.margin = { top: 0, right: 0, bottom: 30, left: 0 };
-      this.width = 960 - this.margin.left - this.margin.right;
-      this.height = 700 - this.margin.top - this.margin.bottom;
+      this.width = 1860 - this.margin.left - this.margin.right;
+      this.height = 500 - this.margin.top - this.margin.bottom;
       this.svg = d3.select('svg')
         .attr('width', this.width + this.margin.right + this.margin.left)
         .attr('height', this.height + this.margin.top + this.margin.bottom)

@@ -1,0 +1,66 @@
+
+<h2 class="page-header">Aplikacje</h2>
+<div class="mat-elevation-z8">
+    <mat-table #table [dataSource]="dataSource"  matSort aria-label="Elements">
+  
+            <!-- <ng-container matColumnDef="id" >
+              <mat-header-cell *matHeaderCellDef  mat-sort-header> No. </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
+            </ng-container> -->
+        
+            
+            <ng-container matColumnDef="name" >
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Nazwa </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
+            </ng-container>
+        
+            
+            <ng-container matColumnDef="description">
+              <mat-header-cell *matHeaderCellDef  mat-sort-header> Opis </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.description}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="date">
+                <mat-header-cell *matHeaderCellDef  mat-sort-header> Data rejestracji </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.date}} </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="token">
+                <mat-header-cell *matHeaderCellDef  mat-sort-header> Token </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.token}} </mat-cell>
+              </ng-container>
+  
+       <ng-container matColumnDef="expandedDetail">
+        <mat-cell *matCellDef="let element" style =  "display: flex;justify-content: flex-end;" > 
+        <button mat-button (click)="onDelete(element)"><mat-icon>delete</mat-icon></button>
+        </mat-cell>
+      </ng-container>
+  
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"
+              matRipple 
+              class="element-row" 
+              [class.expanded]="expandedElement == row"
+              (click)="expandedElement = row">
+            </mat-row>
+      <mat-row *matRowDef="let row; columns: ['expandedDetail']; when: isExpansionDetailRow"
+              [@detailExpand]="row.element == expandedElement ? 'expanded' : 'collapsed'"
+              style="overflow: hidden"> 
+      </mat-row>
+    </mat-table>
+    <mat-paginator #paginator
+        [length]="dataSource.length"
+        [pageIndex]="0"
+        [pageSize]="10"
+        [pageSizeOptions]="[1, 5, 10, 20]">
+      </mat-paginator>
+  </div>
+  
+  
+  
+  
+  <p></p>
+  <button class="add-button" mat-fab="add" (click)="onAdd()">
+     <i class="material-icons">add</i>
+  </button>
+  <p></p>

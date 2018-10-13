@@ -1,9 +1,19 @@
 
-<button  (click)="saveConversation()">Save conversation</button>
+<mat-toolbar class="action_toolbar">
+    <mat-icon class="design_icon">build</mat-icon>
+    <span>Design panel</span>
+
+    <span class="fill-space"></span>
+    
+    <button class="action_button" mat-button (click)="saveConversation()" >Zapisz</button>
+    <button class="action_button" mat-button >Resetuj</button>
+    <button class="action_button" mat-button (click)="toConversations()">Powrót</button>
+    
+  </mat-toolbar>
+
 <svg width="100%" height="200px"></svg>
 
 <mat-tree [dataSource]="nestedDataSource" [treeControl]="nestedTreeControl" class="example-tree" #treeSelector>
-
 	<mat-nested-tree-node *matTreeNodeDef="let node">
 		<li>
 			<div class="mat-tree-node">
@@ -13,82 +23,65 @@
               </mat-icon>
             </button>  	
             <b>{{node.id}}</b>
-            <input type="text" [(ngModel)]="node.name" name="node"   (keyup)="test()"/> 
-            <!-- TRAINING SAMPLES -->
+            <input type="text" class="name_input" [(ngModel)]="node.name" name="node"   (keyup)="test()"> 
+            
+            <div class="operation_buttons">
+              <div class="button_row">
+              <button class="button_column" mat-icon-button (click)="addNewItem(node)"><mat-icon>add</mat-icon></button>
+              <button class="button_column"  *ngIf="node.children.length ==0 && node.level!=0 " mat-icon-button (click)="remove(node)"><mat-icon>close</mat-icon></button>
+              </div>
+              </div>
+
             <mat-expansion-panel>
                 <mat-expansion-panel-header>
                   <mat-panel-title>
-                  Training samples:
+                  <b>Settings</b>
                   </mat-panel-title>
                   <!-- <mat-panel-description>
                   </mat-panel-description> -->
                 </mat-expansion-panel-header>
-                
-                <div>
+                <div class="parameters_row">
+                <!-- TRAININ SET -->
+                <div class="parameters_column">
+                    <h4>Training samples:</h4>
                     <input #newSample
                     (keyup.enter)="addSample(node,newSample.value)"
                     >
-                  <button (click)="addSample(node,newSample.value)">Add</button>
+                  <button mat-icon-button (click)="addSample(node,newSample.value)"><mat-icon>add_circle_outline</mat-icon></button>
                   <mat-list>
                       <mat-list-item *ngFor="let sample of node.trainingSamples"> {{sample}}
-                          <button (click)="removeSample(node,sample)">x</button>
+                          <button  mat-icon-button (click)="removeSample(node,sample)"><mat-icon>close</mat-icon></button>
                       </mat-list-item>
                   </mat-list>
-                </div>            
-            </mat-expansion-panel> 
-            <!-- ANSWERS -->
-            <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-              Answers:
-              </mat-panel-title>
-              <!-- <mat-panel-description>
-                  
-              </mat-panel-description> -->
-            </mat-expansion-panel-header>
-            
-            <div>
-                <input #newAnswer
-                (keyup.enter)="addAnswer(node,newAnswer.value)"
-                >
-              <button (click)="addAnswer(node,newAnswer.value)">Add</button>
-                <mat-list>
-                  <mat-list-item *ngFor="let answer of node.answers"> {{answer}}
-                      <button (click)="removeAnswer(node,answer)">x</button>
-                  </mat-list-item>
-                </mat-list>
-                </div>          
-          </mat-expansion-panel>
-            <!-- EVENTS -->
-            <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                  <mat-panel-title>
-                  Events:
-                  </mat-panel-title>
-                  <!-- <mat-panel-description>
-                      
-                  </mat-panel-description> -->
-                </mat-expansion-panel-header>
-                
-                <div>
+                </div>
+                <!-- ANSWERS -->
+                <div class="parameters_column">
+                  <h4>Answer samples:</h4>
+                  <input #newAnswer
+                  (keyup.enter)="addAnswer(node,newAnswer.value)"
+                  >
+                <button mat-icon-button (click)="addAnswer(node,newAnswer.value)"><mat-icon>add_circle_outline</mat-icon></button>
+                  <mat-list>
+                    <mat-list-item *ngFor="let answer of node.answers"> {{answer}}
+                        <button  mat-icon-button (click)="removeAnswer(node,answer)"><mat-icon>close</mat-icon></button>
+                    </mat-list-item>
+                  </mat-list>
+                  </div>       
+                  <!-- EVENTS -->
+                  <div class="parameters_column">
+                    <h4>Events:</h4>
                     <input #newEvent
                     (keyup.enter)="addEvent(node,newEvent.value)"
                     >
-                  <button (click)="addEvent(node,newEvent.value)">Add</button>
+                  <button mat-icon-button (click)="addEvent(node,newEvent.value)"><mat-icon>add_circle_outline</mat-icon></button>
                     <mat-list>
                       <mat-list-item *ngFor="let event of node.events"> {{event}}
-                          <button (click)="removeEvent(node,event)">x</button>
+                          <button  mat-icon-button (click)="removeEvent(node,event)"><mat-icon>close</mat-icon></button>
                       </mat-list-item>
                     </mat-list>
-                    </div>          
-              </mat-expansion-panel>
-      
-
-          <button  mat-icon-button (click)="addNewItem(node)"><mat-icon>add</mat-icon></button>
-          <button *ngIf="node.children.length ==0 && node.level!=0 " mat-icon-button (click)="remove(node)"><mat-icon>close</mat-icon></button>
-		 
-
-       
+                    </div> 
+                  </div>
+            </mat-expansion-panel>    
 			</div>
 			<ul [class.example-tree-invisible]="!nestedTreeControl.isExpanded(node)">
 				<ng-container matTreeNodeOutlet></ng-container>
@@ -98,9 +91,8 @@
 </mat-tree>
 
 
-
+<!-- UNUSED -->
 <!-- <button (click)="checkit()">TEST</button> -->
-
 <!-- <hr/>
 <h2>Final Location Layout</h2>
 <button mat-icon-button (click)="getTree()">Get Tree</button>

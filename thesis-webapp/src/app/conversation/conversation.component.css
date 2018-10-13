@@ -1,0 +1,43 @@
+
+  .mat-table {
+    overflow: auto;
+    max-height: 500px;
+  }
+  
+  .element-row {
+    position: relative;
+  }
+  
+  .element-row:not(.expanded) {
+    cursor: pointer;
+  }
+  
+  .element-row:not(.expanded):hover {
+    background: #f5f5f5;
+    
+  }
+  
+  .element-row.expanded {
+    border-bottom-color: transparent
+  }
+
+  .mat-elevation-z8{
+    margin: auto;
+    width: 80%;
+    margin-top: 50px
+}
+
+
+.add-button{
+    height: 70px;
+    width:70px;
+    position: fixed;
+    bottom:30px;
+    right:60px;
+    background-color: #4b9831;
+}
+
+h2.page-header
+{
+  text-align: center;
+}

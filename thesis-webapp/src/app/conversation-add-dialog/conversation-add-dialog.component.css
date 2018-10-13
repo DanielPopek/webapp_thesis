@@ -1,0 +1,13 @@
+.mat-form-field {
+    display: block;
+}
+
+textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+.mat-raised-button.mat-primary
+{
+    background-color:#4b9831;  
+}

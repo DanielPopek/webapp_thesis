@@ -26,6 +26,12 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule, MatTableModule, MatPaginatorModule, MatSortModule } from '@angular/material';
 import { MenuComponent } from './menu/menu.component';
 import { DesignPanelComponent } from './design-panel/design-panel.component';
+import {ConversationComponent} from './conversation/conversation.component';
+import {ApplicationComponent} from './application/application.component';
+import {ConversationDeleteDialogComponent} from './conversation-delete-dialog/conversation-delete-dialog.component';
+import {ConversationAddDialogComponent} from './conversation-add-dialog/conversation-add-dialog.component';
+import {ApplicationDeleteDialogComponent} from './application-delete-dialog/application-delete-dialog.component';
+import {ApplicationAddDialogComponent} from './application-add-dialog/application-add-dialog.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { BaseLayoutComponent, BaseLayoutModule } from './shared/layouts';
 
@@ -38,7 +44,13 @@ import { BaseLayoutComponent, BaseLayoutModule } from './shared/layouts';
     SignUpConfirmComponent,
     HomeComponent,
     MenuComponent,
-    DesignPanelComponent
+    DesignPanelComponent,
+    ConversationComponent,
+    ConversationDeleteDialogComponent,
+    ConversationAddDialogComponent,
+    ApplicationDeleteDialogComponent,
+    ApplicationAddDialogComponent,
+    ApplicationComponent
   ],
   imports: [
     BrowserModule, BrowserAnimationsModule, MaterialAppModule,
@@ -72,7 +84,7 @@ import { BaseLayoutComponent, BaseLayoutModule } from './shared/layouts';
       multi: true
     }],
   bootstrap: [AppComponent],
-  entryComponents: []
+  entryComponents: [ConversationDeleteDialogComponent,ConversationAddDialogComponent,ApplicationDeleteDialogComponent,ApplicationAddDialogComponent]
 })
 export class AppModule { }
 platformBrowserDynamic().bootstrapModule(AppModule);

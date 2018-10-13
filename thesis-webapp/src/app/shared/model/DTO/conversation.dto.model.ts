@@ -6,4 +6,5 @@ export class ConversationDTO
   conversationId:number;
   conversationHash:string;
   root:IntentDTO;
+  description:string;
 }

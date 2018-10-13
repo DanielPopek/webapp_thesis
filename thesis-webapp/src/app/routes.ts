@@ -7,6 +7,8 @@ import { HomeComponent } from "src/app/home/home.component";
 import { SignUpConfirmComponent } from "src/app/login/sign-up-confirm/sign-up-confirm.component";
 import { MenuComponent } from './menu/menu.component';
 import { DesignPanelComponent } from "src/app/design-panel/design-panel.component";
+import { ConversationComponent } from "src/app/conversation/conversation.component";
+import { ApplicationComponent } from "src/app/application/application.component";
 
 export const appRoutes: Routes = [
 
@@ -30,7 +32,15 @@ export const appRoutes: Routes = [
         path: 'confirm', component: SignUpConfirmComponent,
     },
     {
-        path: 'panel', component: MenuComponent, canActivate: [AuthGuard],
+        path: 'panel/:conversationHash', component: MenuComponent, canActivate: [AuthGuard],
         children: [{ path: '', component: DesignPanelComponent }]
+    }, 
+    {
+        path: 'conversation', component: MenuComponent, canActivate: [AuthGuard],
+        children: [{ path: '', component: ConversationComponent }]
+    }, 
+    {
+        path: 'application', component: MenuComponent, canActivate: [AuthGuard],
+        children: [{ path: '', component: ApplicationComponent }]
     }, 
 ];
