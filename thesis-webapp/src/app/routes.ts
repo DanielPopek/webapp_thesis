@@ -9,6 +9,8 @@ import { MenuComponent } from './menu/menu.component';
 import { DesignPanelComponent } from "src/app/design-panel/design-panel.component";
 import { ConversationComponent } from "src/app/conversation/conversation.component";
 import { ApplicationComponent } from "src/app/application/application.component";
+import { ChatboxComponent } from "src/app/chatbox/chatbox.component";
+import { RegisterComponent } from "src/app/login/register/register.component";
 
 export const appRoutes: Routes = [
 
@@ -22,6 +24,10 @@ export const appRoutes: Routes = [
     {
         path: 'signup', component: SignUpComponent,
         children: [{ path: '', component: SignUpComponent }]
+    },
+    {
+        path: 'register', component: RegisterComponent,
+        children: [{ path: '', component: RegisterComponent }]
     },
     {
         path: 'login', component: SignInComponent,
@@ -42,5 +48,9 @@ export const appRoutes: Routes = [
     {
         path: 'application', component: MenuComponent, canActivate: [AuthGuard],
         children: [{ path: '', component: ApplicationComponent }]
+    }, 
+    {
+        path: 'chat', component: MenuComponent, canActivate: [AuthGuard],
+        children: [{ path: '', component: ChatboxComponent }]
     }, 
 ];

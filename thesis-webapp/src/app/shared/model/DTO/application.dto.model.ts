@@ -6,4 +6,6 @@ export class ApplicationDTO
   token:string;
   date:string;
   active:boolean;
+  lastModificationDate:string;
+  conversations:string[];
 }

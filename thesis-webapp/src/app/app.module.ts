@@ -14,6 +14,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { UserComponent } from './login/user.component';
 import { SignInComponent } from './login/sign-in/sign-in.component';
 import { SignUpComponent } from './login/sign-up/sign-up.component';
+import { RegisterComponent } from './login/register/register.component';
 import { SignUpConfirmComponent } from "src/app/login/sign-up-confirm/sign-up-confirm.component";
 import { appRoutes } from './routes';
 import { AuthGuard } from './auth/auth.guard';
@@ -26,6 +27,7 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { MatToolbarModule, MatButtonModule, MatSidenavModule, MatIconModule, MatListModule, MatTableModule, MatPaginatorModule, MatSortModule } from '@angular/material';
 import { MenuComponent } from './menu/menu.component';
 import { DesignPanelComponent } from './design-panel/design-panel.component';
+import { ChatboxComponent } from './chatbox/chatbox.component';
 import {ConversationComponent} from './conversation/conversation.component';
 import {ApplicationComponent} from './application/application.component';
 import {ConversationDeleteDialogComponent} from './conversation-delete-dialog/conversation-delete-dialog.component';
@@ -39,6 +41,7 @@ import { BaseLayoutComponent, BaseLayoutModule } from './shared/layouts';
   declarations: [
     AppComponent,
     SignUpComponent,
+    RegisterComponent,
     UserComponent,
     SignInComponent,
     SignUpConfirmComponent,
@@ -50,7 +53,8 @@ import { BaseLayoutComponent, BaseLayoutModule } from './shared/layouts';
     ConversationAddDialogComponent,
     ApplicationDeleteDialogComponent,
     ApplicationAddDialogComponent,
-    ApplicationComponent
+    ApplicationComponent,
+    ChatboxComponent
   ],
   imports: [
     BrowserModule, BrowserAnimationsModule, MaterialAppModule,

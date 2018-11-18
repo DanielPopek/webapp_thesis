@@ -3,7 +3,7 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { DataSource } from '@angular/cdk/collections';
 import { Observable, of } from 'rxjs';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { MatPaginator, MatSort, MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatPaginator, MatSort, MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA, MatSnackBarConfig, MatSnackBar } from '@angular/material';
 import { ConversationListDataSource } from './conversation.datasource';
 import { UserService } from '../shared/services/user.service';
 import { Router } from '@angular/router';
@@ -35,7 +35,7 @@ export class ConversationComponent implements OnInit {
 
   TEMP_DESIGNER_ID:number=1; 
 
-  constructor(private router: Router, public dialog: MatDialog, private communicationService: CommunicationService) { }
+  constructor(private router: Router, public dialog: MatDialog, private communicationService: CommunicationService, private snackBar:MatSnackBar) { }
 
   isExpansionDetailRow = (i: number, row: Object) => row.hasOwnProperty('detailRow');
   expandedElement: any;
@@ -110,11 +110,20 @@ export class ConversationComponent implements OnInit {
     const dialogRef =this.dialog.open(ConversationDeleteDialogComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(
-      data =>{this.refreshDataInList();}
+      data =>{this.refreshDataInList();
+      this.openSnackbar("Usunięto pozycję: ")
+      }
   );  
   }
 
-
+  openSnackbar(text) {
+    let config = new MatSnackBarConfig();
+    config.verticalPosition = 'top';
+    config.duration = 3000;
+    config.panelClass ='snackbar' ;
+    this.snackBar.open(text, true?'Zamknij':undefined, config);
+  }
+  
   openAddDialog() {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false;
@@ -143,6 +152,7 @@ export class ConversationComponent implements OnInit {
         {this.communicationService.saveNewConversation(data).subscribe(response=>{
         console.log("Save endpoint called : "+response);
         this.refreshDataInList();
+        this.openSnackbar("Dodano pozycję: "+data.name)
       })}}
   );  
   }

@@ -53,6 +53,9 @@ export class ApplicationListDataSource extends DataSource<ApplicationDTO> {
         case 'description': return compare(a.description, b.description, isAsc);
         // case 'id': return compare(+a.id, +b.id, isAsc);
         case 'date':return compare(+a.date, +b.date, isAsc);
+        case 'lastModificationDate':return compare(+a.lastModificationDate, +b.lastModificationDate, isAsc);
+        case 'token':return compare(+a.token, +b.token, isAsc);
+        case 'conversations':return compare(+a.conversations, +b.conversations, isAsc);
         default: return 0;
      }
     });

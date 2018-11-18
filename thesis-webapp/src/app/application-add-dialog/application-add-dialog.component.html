@@ -3,15 +3,20 @@
 
      <mat-form-field>
       <input matInput
-      placeholder="Application name"
+      placeholder="Nazwa"
      formControlName="name">
     </mat-form-field>
     <mat-form-field>
 
         <input matInput
-                placeholder="Application description"
+                placeholder="Opis"
                formControlName="description">
 
+    </mat-form-field>
+    <mat-form-field>
+            <mat-select placeholder="Powiązane konwersacje" [formControl]="selections" multiple>
+                    <mat-option *ngFor="let selection of selectionsList" [value]="selection">{{selection}}</mat-option>
+            </mat-select>       
     </mat-form-field>
 </mat-dialog-content>
 
@@ -19,12 +24,12 @@
 
     <button class="mat-raised-button"
             (click)="close()">
-        Close
+        Zamknij
     </button>
 
     <button class="mat-raised-button mat-primary"
             (click)="save()">
-        Save
+        Zapisz
     </button>
 
 </mat-dialog-actions>

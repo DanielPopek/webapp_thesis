@@ -13,23 +13,9 @@ import { Validators } from "@angular/forms";
 })
 export class SignInComponent implements OnInit {
   isLoginError : boolean = false;
-  // constructor(private userService : UserService,private router : Router) { }
-
-  // ngOnInit() {
-  // }
-
-  // OnSubmit(userName,password){
-  //    this.userService.userAuthentication(userName,password).subscribe((data : any)=>{
-  //     localStorage.setItem('userToken',data.apiKey);
-  //     console.log(data.apiKey)
-  //     this.router.navigate(['/home']);
-  //   },
-  //   (err : HttpErrorResponse)=>{
-  //     this.isLoginError = true;
-  //     console.log(err);
-      
-  //   });
-  // }
+  errorMessage='';
+  ERROR_MESSAGE_WRONG_DATA="Podano niepoprany login lub hasło";
+  ERROR_MESSAGE_ACCOUNT_NOT_ACTIVE="Konto jest nieaktywne";
   userForm: FormGroup;
   formErrors = {
     email: '',
@@ -64,7 +50,7 @@ export class SignInComponent implements OnInit {
       password: [
         '',
         [
-          Validators.pattern('^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$'),
+          Validators.pattern('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,25}$'),
           Validators.minLength(6),
           Validators.maxLength(25)
         ]
@@ -96,42 +82,24 @@ export class SignInComponent implements OnInit {
     }
   }
 
-  signInWithGoogle() {
-   // this.auth.googleLogin().then(() => this.afterSignIn());
-  }
-
-  signInWithGithub() {
-   // this.auth.githubLogin().then(() => this.afterSignIn());
-  }
-
   signInWithEmail() {
-    // // this.auth
-    // //   .emailLogin(this.userForm.value['email'], this.userForm.value['password'])
-    //      this.userService.userAuthentication(this.userForm.value['email'],this.userForm.value['password']).subscribe((data : any)=>{
-    //  // localStorage.setItem('userToken',data.apiKey);
-    //   localStorage.setItem('userToken','12345');
-    //   console.log(data.apiKey)
-    //   this.router.navigate(['/home']);
-    // },
-    // (err : HttpErrorResponse)=>{
-    //   this.isLoginError = true;
-    //   console.log(err);
+     this.userService.userAuthentication(this.userForm.value['email'],this.userForm.value['password']).subscribe((data : any)=>{
+      localStorage.setItem('userToken',data.apiKey);
+      console.log(data.apiKey)
+      this.router.navigate(['/']);
+    },
+    (err : HttpErrorResponse)=>{
+      this.isLoginError = true;
+      console.log(err);
+      if(err.error.message==="USER IS NOT ACTIVE")
+        this.errorMessage=this.ERROR_MESSAGE_ACCOUNT_NOT_ACTIVE;
+      else this.errorMessage=this.ERROR_MESSAGE_WRONG_DATA;
       
-    // });
-
-    localStorage.setItem('userToken','12345');
-    this.router.navigate(['/home']);
-  }
-
-  signInAnonymously() {
-    //this.auth.anonymousLogin().then(() => this.afterSignIn());
+    });
   }
 
   login() {
     this.signInWithEmail();
   }
 
-  private afterSignIn() {
-    this.router.navigate(['/']);
-  }
 }

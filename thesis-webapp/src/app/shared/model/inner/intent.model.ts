@@ -1,11 +1,12 @@
 export class Intent
 {
-  id: number;
-  parentId: number;
+  id: string;
+  parentId: string;
   level: number;
   name:string;
   answers:string[];
   trainingSamples:string[];
   events:string[];
+  misunderstandingStatements:string[];
   children:Intent[];
 }

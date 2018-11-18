@@ -33,7 +33,6 @@ export class SignUpComponent implements OnInit {
     if (form != null)
       form.reset();
     this.user = {
-      ProfessionType: '',
       Password: '',
       Email: '',
       FirstName: '',

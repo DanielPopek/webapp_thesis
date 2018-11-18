@@ -12,65 +12,24 @@ export class UserService {
   constructor(private http: HttpClient) { }
 
   registerUser(user: User) {
-    const body: any = {
-      professionTypeId: Number(user.ProfessionType),
-      password: user.Password,
-      email: user.Email,
-      firstName: user.FirstName,
-      lastName: user.LastName
-    }
-
-    const body2: any = {
+    const requestBody: any = {
       "email": String(user.Email),
       "password": String(user.Password),
       "firstName": String(user.FirstName),
-      "lastName": String(user.LastName),
-      "professionTypeId": Number(user.ProfessionType)
+      "lastName": String(user.LastName)
     }
-    console.log(body2);
+    console.log(requestBody);
     var reqHeader = new HttpHeaders({ 'Content-Type': 'application/json', 'No-Auth': 'True' });
-    return this.http.post(this.rootUrl + '/supervisor/register', body2, { headers: reqHeader });
+    return this.http.post(this.rootUrl + '/authentication/register', requestBody, { headers: reqHeader });
   }
 
   userAuthentication(userName, password) {
-    var data = "username=" + userName + "&password=" + password + "&grant_type=password";
     var data = '{"login":"' + userName + '","password":"' + password + '"}'
     var reqHeader = new HttpHeaders({ 'Content-Type': 'application/json', 'No-Auth': 'True' });
-   // return this.http.post(this.rootUrl + '/loginSupervisor', data, { headers: reqHeader });
-   //return {"status":"ok"};
+    return this.http.post(this.rootUrl + '/authentication/login', data, { headers: reqHeader });
   }
 
-
-      // registerUser(user: User) {
-    //   const body: any = {
-    //     professionTypeId: Number(user.ProfessionType),
-    //     password: user.Password,
-    //     email: user.Email,
-    //     firstName: user.FirstName,
-    //     lastName: user.LastName
-    //   }
-  
-    //   const body2: any = {
-    //     "email": String(user.Email),
-    //     "password": String(user.Password),
-    //     "firstName": String(user.FirstName),
-    //     "lastName": String(user.LastName),
-    //     "professionTypeId": Number(user.ProfessionType)
-    //   }
-    //   console.log(body2);
-    //   var reqHeader = new HttpHeaders({ 'Content-Type': 'application/json', 'No-Auth': 'True' });
-    //   return this.http.post(this.rootUrl + '/supervisor/register', body2, { headers: reqHeader });
-    // }
-  
-    // userAuthentication(userName, password) {
-    //   var data = "username=" + userName + "&password=" + password + "&grant_type=password";
-    //   var data = '{"login":"' + userName + '","password":"' + password + '"}'
-    //   var reqHeader = new HttpHeaders({ 'Content-Type': 'application/json', 'No-Auth': 'True' });
-    //  // return this.http.post(this.rootUrl + '/loginSupervisor', data, { headers: reqHeader });
-    //  //return {"status":"ok"};
-    // }
-
-    // getPatientsOfSupervisor(){
+      // getPatientsOfSupervisor(){
     //     var apiKey = localStorage.getItem('userToken');
     //     console.log('Service');
     //     console.log(apiKey);
@@ -78,5 +37,4 @@ export class UserService {
     //     //reqHeader.set('Authorization', apiKey );
     //     return  this.http.get(this.rootUrl +'/supervisor/patients',{ headers: reqHeader });
     //   }
-
 }

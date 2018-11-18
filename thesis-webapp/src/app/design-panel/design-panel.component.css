@@ -20,6 +20,7 @@
 
   .parameters_column{
     display: table-cell;
+    max-width: 400px;
   }
 
   .parameters_row{
@@ -71,11 +72,32 @@ color: white;
 
 }
 
+.snackbar{
+  color: #4b9831;
+}
+
+.mat-simple-snackbar-action {
+color:#4b9831;
+}
+/* .mat-simple-snackbar-action{
+  color:#4b9831;
+} */
+
 .add_button
 {
   /* background: #4b9831;
   height: 20px;
   width:30px; */
 }
+
+.example-container {
+  /* position: fixed;
+  top: 100;
+  bottom: 0;
+  left: 0;
+  right: 0; */
+  /* overflow: */
+}
+
 
 

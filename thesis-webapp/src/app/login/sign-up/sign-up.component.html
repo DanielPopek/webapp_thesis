@@ -32,8 +32,9 @@
             <input matInput placeholder="Potwierdź hasło" type="password" name="password-confirm" required [(ngModel)]="passwordConfirm" (change)="onConfirmChange(event)">
           </mat-form-field>
 
+          <!-- required [(ngModel)]="user.ProfessionType" -->
           <mat-form-field>
-              <mat-select [(value)]="selected" name="type" required [(ngModel)]="user.ProfessionType">
+              <mat-select [(value)]="selected" name="type">
                 <mat-option value="1">1</mat-option>
                 <mat-option value="2">2</mat-option>
                 <mat-option value="3">3</mat-option>

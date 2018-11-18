@@ -11,7 +11,7 @@ import { ApplicationDTO } from "src/app/shared/model/DTO/application.dto.model";
 
 @Injectable()
 export class CommunicationService {
-    readonly rootUrl = 'http://localhost:8080';
+    readonly rootUrl = 'http://localhost:8080/management';
     constructor(private http: HttpClient) { }
   
     getIntentByCommunicationHash(hash)
@@ -61,5 +61,14 @@ export class CommunicationService {
     {
         var result:any= this.http.delete(this.rootUrl +'/application/'+token);
         return result;
+    }
+
+    getResponse(context, conversationHash)
+    {
+        var wrappedContext={
+            "context":context,
+            "conversationHash":conversationHash
+        }
+        return this.http.post(this.rootUrl + '/context', wrappedContext);
     }
 }

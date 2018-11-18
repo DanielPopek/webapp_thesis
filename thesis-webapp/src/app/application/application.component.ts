@@ -2,7 +2,7 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { DataSource } from '@angular/cdk/collections';
 import { Observable, of } from 'rxjs';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { MatPaginator, MatSort, MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatPaginator, MatSort, MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA, MatSnackBarConfig, MatSnackBar } from '@angular/material';
 import { ApplicationListDataSource } from './application.datasource';
 import { UserService } from '../shared/services/user.service';
 import { Router } from '@angular/router';
@@ -28,13 +28,13 @@ export class ApplicationComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  displayedColumns = ['name', 'description','date','token'];
+  displayedColumns = ['name', 'description','date','lastModificationDate','token','conversations'];
   dataSource: ApplicationListDataSource;
   showData = false;
 
   TEMP_DESIGNER_ID:number=1; 
 
-  constructor(private router: Router, public dialog: MatDialog, private communicationService: CommunicationService) { }
+  constructor(private router: Router, public dialog: MatDialog, private communicationService: CommunicationService,private snackBar:MatSnackBar) { }
 
   isExpansionDetailRow = (i: number, row: Object) => row.hasOwnProperty('detailRow');
   expandedElement: any;
@@ -92,10 +92,20 @@ export class ApplicationComponent implements OnInit {
     const dialogRef =this.dialog.open(ApplicationDeleteDialogComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(
-      data =>{this.refreshDataInList();}
+      data =>{this.refreshDataInList();
+      this.openSnackbar("Usunięto pozycję")
+      }
+
   );  
   }
 
+  openSnackbar(text) {
+    let config = new MatSnackBarConfig();
+    config.verticalPosition = 'top';
+    config.duration = 3000;
+    config.panelClass ='snackbar' ;
+    this.snackBar.open(text, true?'Zamknij':undefined, config);
+  }
 
   openAddDialog() {
     const dialogConfig = new MatDialogConfig();
@@ -120,6 +130,7 @@ export class ApplicationComponent implements OnInit {
           this.communicationService.saveNewApplication(data).subscribe(response=>{
             console.log("Save endpoint called : "+response);
             this.refreshDataInList();
+            this.openSnackbar("Dodano pozycję: "+data.name)
           })
         }}  
   );  
@@ -129,14 +140,14 @@ export class ApplicationComponent implements OnInit {
 const EXAMPLE_DATA: ApplicationDTO[] = [
   {
     name: '--', active:true, description: '---', date: '2018-03-12',
-    token: "Xi9WKcTUGxPof3q5OZyl6R0FDwMwCvw6test"
+    token: "Xi9WKcTUGxPof3q5OZyl6R0FDwMwCvw6test",lastModificationDate: '2018-03-12',conversations:[]
   },
   {
     name: '--', active:true, description: '---', date: '2018-03-12',
-    token: "Xi9WKcTUGxPof3q5OZyl6R0FDwMwCvw6test"
+    token: "Xi9WKcTUGxPof3q5OZyl6R0FDwMwCvw6test",lastModificationDate: '2018-03-12',conversations:[]
   },
   {
     name: '--', active:true, description: '---', date: '2018-03-12',
-    token: "Xi9WKcTUGxPof3q5OZyl6R0FDwMwCvw6test"
+    token: "Xi9WKcTUGxPof3q5OZyl6R0FDwMwCvw6test",lastModificationDate: '2018-03-12',conversations:[]
   },
 ];

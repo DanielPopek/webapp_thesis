@@ -1,6 +1,10 @@
 
-<h2 class="page-header">Aplikacje</h2>
+<!-- <h2 class="page-header">Aplikacje</h2> -->
+
 <div class="mat-elevation-z8">
+    <mat-toolbar>
+        <span>Aplikacje</span>
+      </mat-toolbar>
     <mat-table #table [dataSource]="dataSource"  matSort aria-label="Elements">
   
             <!-- <ng-container matColumnDef="id" >
@@ -25,9 +29,19 @@
                 <mat-cell *matCellDef="let element"> {{element.date}} </mat-cell>
               </ng-container>
 
+              <ng-container matColumnDef="lastModificationDate">
+                <mat-header-cell *matHeaderCellDef  mat-sort-header> Data modyfikacji </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.lastModificationDate}} </mat-cell>
+              </ng-container>
+
               <ng-container matColumnDef="token">
                 <mat-header-cell *matHeaderCellDef  mat-sort-header> Token </mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{element.token}} </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="conversations">
+                <mat-header-cell *matHeaderCellDef  mat-sort-header> Konwersacje </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.conversations}} </mat-cell>
               </ng-container>
   
        <ng-container matColumnDef="expandedDetail">

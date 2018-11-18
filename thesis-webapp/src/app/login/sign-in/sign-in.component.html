@@ -6,7 +6,7 @@
     <div class="sigin-main mat-elevation-z12">
       <mat-card>
         <mat-card-title><i class="material-icons" style="font-size:30px">fingerprint</i>&nbsp;&nbsp;Logowanie
-          <a class="redirect" [routerLink]="['/signup']">Rejestracja</a>
+          <a class="redirect" [routerLink]="['/register']">Rejestracja</a>
         </mat-card-title>
         <mat-card-content id="form_card">
 
@@ -23,7 +23,7 @@
             </mat-form-field>
 
             <div *ngIf="isLoginError" style="color:#f44336">
-              <i class="material-icons">error</i> Niepoprawna nazwa użytkownika lub hasło
+              <i class="material-icons">error</i> {{errorMessage}}
           </div>
             <button mat-raised-button color="primary" id="submit-button" type="submit" [disabled]="!userForm.valid">Zaloguj</button>
           </form>

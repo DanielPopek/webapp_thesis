@@ -21,7 +21,7 @@ export class IntentStorage {
 
 
 //initial data 
-  treeData = [{ "id": 0, "level": 0, "name": "root", "parentId": null, "events":[], "answers":["answer1","answer2","answer3"],"trainingSamples":["train1","train2"], "children": [{ "id": 1.1, "level": 1, "name": "child1", "parentId": 0, "events":[], "answers":["answer1","answer2","answer3"],"trainingSamples":["train1","train2"], "children": [] }] }] as Intent[];
+  treeData = [{ "id": "0", "level": 0, "name": "root", "parentId": null, "events":[],"misunderstandingStatements":[], "answers":["answer1","answer2","answer3"],"trainingSamples":["train1","train2"], "children": [{ "id": "1.1", "level": 1, "name": "child1", "parentId": "0", "events":[], "answers":["answer1","answer2","answer3"],"trainingSamples":["train1","train2"], "children": [] }] }] as Intent[];
  
   initialize() {
     const data = this.treeData;
@@ -43,15 +43,16 @@ export class IntentStorage {
 
   convertDTOtoIntent(dto:IntentDTO)
   {
-    return [this.convertDTOtoIntentRecursively(dto,0,0,null)];
+    return [this.convertDTOtoIntentRecursively(dto,"0",0,null)];
   }
 
-  convertDTOtoIntentRecursively(dto:IntentDTO, id:number,level:number, parentId:number)
+  convertDTOtoIntentRecursively(dto:IntentDTO, id:string,level:number, parentId:string)
   {
     var intent:Intent = new Intent();
     intent.trainingSamples=dto.trainingSamples;
     intent.answers=dto.answerSamples;
     intent.events=dto.events;
+    intent.misunderstandingStatements=dto.misunderstandingStatements;
     intent.name=dto.name;
     intent.level=level;
     intent.parentId=parentId;
@@ -63,7 +64,8 @@ export class IntentStorage {
       
       for(i = num;i<dto.subintents.length;i++) {
          var child=dto.subintents[i];
-         var childIntent:Intent=this.convertDTOtoIntentRecursively(child,level+1+ ((i + 1) / 10.0),level+1,id)
+        //  var childIntent:Intent=this.convertDTOtoIntentRecursively(child,level+1+ ((i + 1) / 10.0),level+1,id)
+        var childIntent:Intent=this.convertDTOtoIntentRecursively(child,id+'.'+(i+1),level+1,id)
          intent.children.push(childIntent);
       }
       return intent;
@@ -75,6 +77,7 @@ export class IntentStorage {
     dto.trainingSamples=intent.trainingSamples;
     dto.answerSamples=intent.answers;
     dto.events=intent.events;
+    dto.misunderstandingStatements=intent.misunderstandingStatements;
     dto.name=intent.name;
     dto.subintents=[]
     var childArray:IntentDTO[];
@@ -107,7 +110,7 @@ export class IntentStorage {
       // console.log(key);
       const value = obj[key];
       const node = new Intent();
-      node.id = level;
+      node.id = "0";
 
       node.level = level;
       node.name = key;
@@ -137,11 +140,12 @@ export class IntentStorage {
         newNode.answers=[];
         newNode.trainingSamples=[];
         newNode.events=[];
+        newNode.misunderstandingStatements=[];
         newNode.level = parent.level + 1;
         console.log(newNode.level);
         newNode.parentId = parent.id;
-        newNode.id = newNode.level + ((parent.children.length + 1) / 10.0);
-
+        // newNode.id = newNode.level + ((parent.children.length + 1) / 10.0);
+        newNode.id = parent.id + '.'+(parent.children.length + 1);
 
         console.log(parent.children.length);
         console.log(newNode.id);
@@ -174,7 +178,7 @@ export class IntentStorage {
     node.name = name;
     this.dataChange.next(this.data);
   }
-  public findParent(id: number, node: any): any {
+  public findParent(id: string, node: any): any {
 
     console.log("id " + id + " node" + node.id);
     if (node != undefined && node.id === id) {

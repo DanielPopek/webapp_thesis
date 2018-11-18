@@ -9,6 +9,11 @@ import { CommunicationService } from "src/app/shared/services/communication.serv
 import { IntentDTO } from "src/app/shared/model/DTO/intent.dto.model";
 import { Router } from "@angular/router";
 import { ActivatedRoute } from "@angular/router";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { MatSnackBarConfig } from "@angular/material/snack-bar";
+import { ChatboxComponent } from "src/app/chatbox/chatbox.component";
+import { Input } from "@angular/core";
+import { MatSidenav } from "@angular/material/sidenav";
 
 
 @Component({
@@ -21,8 +26,12 @@ export class DesignPanelComponent implements OnInit {
 
    TEMP_CONV_ID:string='Xi9WKcTUGxPof3q5OZyl6R0FDwMwCvw6test'; 
    hash;
+   current;
+
+   @Input() chatbox: ChatboxComponent;
 
   @ViewChild('treeSelector') tree: any;
+  @ViewChild('sidenav') sidenav: MatSidenav;
   
     nestedTreeControl: NestedTreeControl<Intent>;
     nestedDataSource: MatTreeNestedDataSource<Intent>;
@@ -47,14 +56,16 @@ export class DesignPanelComponent implements OnInit {
   
   
     constructor(public database: IntentStorage, private communicationService: CommunicationService,  private router: Router,
-      private route: ActivatedRoute,) {
+      private route: ActivatedRoute, private snackBar:MatSnackBar) {
       this.nestedTreeControl = new NestedTreeControl<Intent>(this._getChildren);
       this.nestedDataSource = new MatTreeNestedDataSource();
       database.dataChange.subscribe(data => this.nestedDataSource.data = data);
+      this.current=this.nestedDataSource.data[0];
     }
 
     ngOnInit() {
 
+      
       this.hash = this.route.snapshot.paramMap.get('conversationHash');
       console.log(this.hash);
 
@@ -64,12 +75,14 @@ export class DesignPanelComponent implements OnInit {
         this.database.readData(this.database.convertDTOtoIntent(data));
         this.loadTreeDiagram();
       });
+      
     }
 
     saveConversation()
     {
       this.communicationService.saveRootIntentByConversationHash(this.hash,this.database.getStorageAsDTO()).subscribe((data) => {
         console.log(data)
+        this.openSnackbar('Konwersacja została poprawnie zapisana w bazie danych')
       });
     }
 
@@ -80,30 +93,30 @@ export class DesignPanelComponent implements OnInit {
 
     private _getChildren = (node: Intent) => node.children;
 
+    setCurrentNode(node)
+    {
+      this.current=node;
+      this.sidenav.toggle();
+    }
 
     //TODO -IMPORVE UPDATE !!!
-    test()
+    update()
     {
-      // this.database.inform();
-      // this.loadTreeDiagram();
-      // alert("changed");
+      this.renderChanges()
+      this.getTree();
+      this.loadTreeDiagram();
     }
 
     addNewItem(node: Intent) {
       this.database.insertItem(node, 'new item');
       this.nestedTreeControl.expand(node);
-      this.renderChanges()
-      this.getTree();
-      this.loadTreeDiagram();
+      this.update();
     }
   
     public remove(node: Intent) {
       console.log("currentNode");
-  
       this.database.removeItem(node, this.database.data[0]);
-      this.renderChanges()
-      this.getTree();
-      this.loadTreeDiagram();
+      this.update();
     }
   
     renderChanges() {
@@ -115,11 +128,12 @@ export class DesignPanelComponent implements OnInit {
   
     getTree() {
       console.log(JSON.stringify(this.database.data));
+      console.log(this.treeData);
     }
   
-    check() {
-      console.log("parent ", JSON.stringify(this.database.findParent(3.1, this.database.data[0])));
-    }
+    // check() {
+    //   console.log("parent ", JSON.stringify(this.database.findParent(3.1, this.database.data[0])));
+    // }
 
     addAnswer(node:Intent, newAnswer: string) {
       if (newAnswer&&!node.answers.includes(newAnswer)) {
@@ -166,20 +180,46 @@ export class DesignPanelComponent implements OnInit {
       }
     }
 
+    addMisunderstandingStatement(node:Intent, newSample: string) {
+      if (newSample&&!node.misunderstandingStatements.includes(newSample)) {
+        node.misunderstandingStatements.push(newSample);
+      }
+    }
+
+    removeMisunderstandingStatement(node:Intent, toRemove: string) {
+     for (var i=node.misunderstandingStatements.length-1; i>=0; i--) {
+      if (node.misunderstandingStatements[i] === toRemove) {
+        node.misunderstandingStatements.splice(i, 1);
+           break; 
+      }
+    }
+    }
+
+
+    openSnackbar(text) {
+      let config = new MatSnackBarConfig();
+      config.verticalPosition = 'top';
+      config.duration = 3000;
+      config.panelClass ='snackbar' ;
+      this.snackBar.open(text, true?'Zamknij':undefined, config);
+    }
     ///D3////////////////////////
     ///D3JS methods
 
     loadTreeDiagram()
     {
       this.treeData = this.nestedDataSource.data[0];
-      this.setData();
       this.currentNode = this.root;
+      this.setData();
+
     }
 
     setData() {
       this.margin = { top: 0, right: 0, bottom: 30, left: 0 };
       this.width = 1860 - this.margin.left - this.margin.right;
       this.height = 500 - this.margin.top - this.margin.bottom;
+      d3.select("svg").remove();
+      d3.select("#chart").append("svg");
       this.svg = d3.select('svg')
         .attr('width', this.width + this.margin.right + this.margin.left)
         .attr('height', this.height + this.margin.top + this.margin.bottom)
@@ -261,7 +301,7 @@ export class DesignPanelComponent implements OnInit {
           return d.children || d._children ? 'end' : 'start';
         })
         .style('font', '12px sans-serif')
-        .text((d) => { return d.data.name; });
+        .text((d) => { return d.data.id+' '+d.data.name; });
   
       let nodeUpdate = nodeEnter.merge(node);
   
