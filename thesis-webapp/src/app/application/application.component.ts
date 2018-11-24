@@ -11,6 +11,7 @@ import { CommunicationService } from "src/app/shared/services/communication.serv
 import { ApplicationDTO } from "src/app/shared/model/DTO/application.dto.model";
 import { ApplicationDeleteDialogComponent } from "src/app/application-delete-dialog/application-delete-dialog.component";
 import { ApplicationAddDialogComponent } from "src/app/application-add-dialog/application-add-dialog.component";
+import { HttpErrorResponse } from "@angular/common/http";
 
 @Component({
   selector: 'app-application',
@@ -28,13 +29,13 @@ export class ApplicationComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  displayedColumns = ['name', 'description','date','lastModificationDate','token','conversations'];
+  displayedColumns = ['name', 'description', 'date', 'lastModificationDate', 'token', 'conversations'];
   dataSource: ApplicationListDataSource;
   showData = false;
 
-  TEMP_DESIGNER_ID:number=1; 
+  TEMP_DESIGNER_ID: number = 1;
 
-  constructor(private router: Router, public dialog: MatDialog, private communicationService: CommunicationService,private snackBar:MatSnackBar) { }
+  constructor(private router: Router, public dialog: MatDialog, private communicationService: CommunicationService, private snackBar: MatSnackBar) { }
 
   isExpansionDetailRow = (i: number, row: Object) => row.hasOwnProperty('detailRow');
   expandedElement: any;
@@ -53,9 +54,8 @@ export class ApplicationComponent implements OnInit {
     this.dataSource = new ApplicationListDataSource(this.paginator, this.sort, EXAMPLE_DATA);
   }
 
-  refreshDataInList()
-  {
-    this.communicationService.getApplicationsByDeveloperId(this.TEMP_DESIGNER_ID).subscribe((data: any) => {
+  refreshDataInList() {
+    this.communicationService.getApplicationsByDeveloperHash().subscribe((data: any) => {
       console.log(data)
       this.showData = true;
       localStorage.setItem('applications', JSON.stringify(data));
@@ -69,85 +69,122 @@ export class ApplicationComponent implements OnInit {
     this.openDeleteDialog(application);
   }
 
-  onAdd()
-  {
+  onAdd() {
     this.openAddDialog();
+  }
+
+  onEditData(element) {
+    this.openEditDialog(element);
   }
 
   openDeleteDialog(application: ApplicationDTO) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false;
     dialogConfig.autoFocus = true;
-    dialogConfig.position = {
-      top: '200px',
-      left: '600px',
-      right: '100px',
-    };
 
     dialogConfig.hasBackdrop = false;
     dialogConfig.data = application;
     dialogConfig.height = '200px';
     dialogConfig.width = '400px';
 
-    const dialogRef =this.dialog.open(ApplicationDeleteDialogComponent, dialogConfig);
+    const dialogRef = this.dialog.open(ApplicationDeleteDialogComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(
-      data =>{this.refreshDataInList();
-      this.openSnackbar("Usunięto pozycję")
+      data => {
+        if (data) {
+          console.log(data.token);
+          this.communicationService.deleteApplicationByApplicationToken(data.token).subscribe((response: any) => {
+            this.refreshDataInList();
+            this.openSnackbar("Usunięto pozycję: " + data.name)
+          },
+            (err: HttpErrorResponse) => {
+              console.log(err);
+              this.openSnackbar('Podczas akcji wystąpił nieoczekiwany błąd')
+            })
+        }
       }
-
-  );  
+    );
   }
 
   openSnackbar(text) {
     let config = new MatSnackBarConfig();
     config.verticalPosition = 'top';
     config.duration = 3000;
-    config.panelClass ='snackbar' ;
-    this.snackBar.open(text, true?'Zamknij':undefined, config);
+    config.panelClass = 'snackbar';
+    this.snackBar.open(text, true ? 'Zamknij' : undefined, config);
   }
 
   openAddDialog() {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false;
     dialogConfig.autoFocus = true;
-    dialogConfig.position = {
-      top: '200px',
-      left: '600px',
-      right: '100px',
-    };
-
+  
     dialogConfig.hasBackdrop = false;
-    dialogConfig.height = '300px';
+    dialogConfig.height = '400px';
     dialogConfig.width = '400px';
 
-    const dialogRef =this.dialog.open(ApplicationAddDialogComponent, dialogConfig);
+    const dialogRef = this.dialog.open(ApplicationAddDialogComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(
-      data => 
-      {if(data)
-        {
-          this.communicationService.saveNewApplication(data).subscribe(response=>{
-            console.log("Save endpoint called : "+response);
-            this.refreshDataInList();
-            this.openSnackbar("Dodano pozycję: "+data.name)
-          })
-        }}  
-  );  
+      data => {
+        if (data) {
+          this.communicationService.saveNewApplication(data)
+            .subscribe((response: any) => {
+              console.log("Save endpoint called : " + response);
+              this.refreshDataInList();
+              this.openSnackbar("Dodano pozycję: " + data.name)
+            },
+            (err: HttpErrorResponse) => {
+              console.log(err);
+              this.openSnackbar('Podczas zapisu wystąpił nieoczekiwany błąd')
+            })
+        }
+      }
+    );
   }
+
+openEditDialog(application:ApplicationDTO) {
+  const dialogConfig = new MatDialogConfig();
+  dialogConfig.disableClose = false;
+  dialogConfig.autoFocus = true;
+
+  dialogConfig.hasBackdrop = false;
+  dialogConfig.height = '420px';
+  dialogConfig.width = '400px';
+
+  dialogConfig.data = application;
+  const dialogRef = this.dialog.open(ApplicationAddDialogComponent, dialogConfig);
+
+  dialogRef.afterClosed().subscribe(
+    data => {
+      if (data) {
+        this.communicationService.editApplication(data)
+          .subscribe((response: any) => {
+            console.log("Save endpoint called : " + response);
+            this.refreshDataInList();
+            this.openSnackbar("Dodano pozycję: " + data.name)
+          },
+          (err: HttpErrorResponse) => {
+            console.log(err);
+            this.openSnackbar('Podczas zapisu wystąpił nieoczekiwany błąd')
+          })
+      }
+    }
+  );
+}
 }
 
 const EXAMPLE_DATA: ApplicationDTO[] = [
   {
-    name: '--', active:true, description: '---', date: '2018-03-12',
-    token: "Xi9WKcTUGxPof3q5OZyl6R0FDwMwCvw6test",lastModificationDate: '2018-03-12',conversations:[]
+    name: '--', active: true, description: '---', date: '2018-03-12',
+    token: "Xi9WKcTUGxPof3q5OZyl6R0FDwMwCvw6test", lastModificationDate: '2018-03-12', conversations: [], hashes:[],designerConversationHashes:[],designerConversationNames:[]
   },
   {
-    name: '--', active:true, description: '---', date: '2018-03-12',
-    token: "Xi9WKcTUGxPof3q5OZyl6R0FDwMwCvw6test",lastModificationDate: '2018-03-12',conversations:[]
+    name: '--', active: true, description: '---', date: '2018-03-12',
+    token: "Xi9WKcTUGxPof3q5OZyl6R0FDwMwCvw6test", lastModificationDate: '2018-03-12', conversations: [], hashes:[],designerConversationHashes:[],designerConversationNames:[]
   },
   {
-    name: '--', active:true, description: '---', date: '2018-03-12',
-    token: "Xi9WKcTUGxPof3q5OZyl6R0FDwMwCvw6test",lastModificationDate: '2018-03-12',conversations:[]
+    name: '--', active: true, description: '---', date: '2018-03-12',
+    token: "Xi9WKcTUGxPof3q5OZyl6R0FDwMwCvw6test", lastModificationDate: '2018-03-12', conversations: [], hashes:[],designerConversationHashes:[],designerConversationNames:[]
   },
 ];

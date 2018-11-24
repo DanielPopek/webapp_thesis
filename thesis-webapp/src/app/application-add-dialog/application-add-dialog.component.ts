@@ -3,6 +3,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 import {FormBuilder, Validators, FormGroup} from "@angular/forms";
 import { ApplicationDTO } from "src/app/shared/model/DTO/application.dto.model";
 import { FormControl } from "@angular/forms";
+import { CommunicationService } from "src/app/shared/services/communication.service";
 
 @Component({
   selector: 'app-application-add-dialog',
@@ -15,11 +16,25 @@ export class ApplicationAddDialogComponent implements OnInit {
   description:string;
   name:string;
   selections = new FormControl();
+  application: ApplicationDTO;
+
+
+  selectionsList: string[] = [];
+  hashesList:string[]=[];
 
   constructor(
       private fb: FormBuilder,
-      private dialogRef: MatDialogRef<ApplicationAddDialogComponent> ) {
-
+      private dialogRef: MatDialogRef<ApplicationAddDialogComponent>,
+      private communicationService: CommunicationService,
+      @Inject(MAT_DIALOG_DATA) data ) {
+     
+      if(data)
+        {
+            this.application=data.element;
+            this.selections.setValue(this.application.conversations);
+            this.name=this.application.name;
+            this.description=this.application.description;
+        }
       this.form = fb.group({
           description: [this.description, Validators.required],
           name: [this.name, Validators.required]
@@ -28,9 +43,14 @@ export class ApplicationAddDialogComponent implements OnInit {
   }
 
 
-  selectionsList: string[] = ['Extra cheese', 'Mushroom','Mushroom','Onion', 'Pepperoni', 'Sausage', 'Tomato'];
 
   ngOnInit() {
+
+    this.communicationService.getConversationsNamesByDeveloperHash().subscribe((data: any) => {
+        console.log(data);
+        this.selectionsList=data.names;
+        this.hashesList=data.hashes;
+      });
 
   }
 
@@ -38,8 +58,17 @@ export class ApplicationAddDialogComponent implements OnInit {
   save() {
       console.log(this.selections.value);
       var dto:ApplicationDTO= new ApplicationDTO();
+      if(this.application)
+        {
+            dto.token=this.application.token;
+        }
       dto.name=this.form.value.name;
       dto.description=this.form.value.description;
+      var resultHashes=[];
+      this.selections.value.forEach(element => {
+          resultHashes.push(this.hashesList[this.selectionsList.indexOf(element)]);
+      });
+      dto.hashes=resultHashes;
       this.dialogRef.close(dto);
   }
 

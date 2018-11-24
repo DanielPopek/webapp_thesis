@@ -8,4 +8,7 @@ export class ApplicationDTO
   active:boolean;
   lastModificationDate:string;
   conversations:string[];
+  hashes:string[];
+  designerConversationHashes:string[];
+  designerConversationNames:string[];
 }

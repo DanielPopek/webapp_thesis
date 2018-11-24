@@ -5,16 +5,25 @@
     <span class="fill-space"></span>
     
     <button class="action_button" mat-button (click)="saveConversation()" >Zapisz</button>
-    <button class="action_button" mat-button >Resetuj</button>
     <button class="action_button" mat-button (click)="toConversations()">Powrót</button>
     
   </mat-toolbar>
 
   <mat-sidenav-container >
     <mat-sidenav #sidenav mode="push">
-      <p><button mat-button (click)="sidenav.toggle()"><mat-icon>exit_to_app</mat-icon></button></p>
-      <h4>{{current.name}}</h4>
-      <mat-expansion-panel>
+        <div class="titlebox_sidenav">
+            <div class="titlebox_name">
+                <h2>{{current.name}}</h2>
+            </div>
+            <div class="titlebox_icon">
+                <button mat-button (click)="sidenav.toggle()"><mat-icon>exit_to_app</mat-icon></button>
+                <!-- <h2><mat-icon (click)="sidenav.toggle()">exit_to_app</mat-icon></h2> -->
+            </div>
+        </div>
+
+  
+
+      <mat-expansion-panel *ngIf="current.name!='root'">  
           <mat-expansion-panel-header>
             <mat-panel-title>
             <b>Zbiór treningowy</b>
@@ -35,7 +44,7 @@
           </div>
             </div>
       </mat-expansion-panel> 
-      <mat-expansion-panel>
+      <mat-expansion-panel *ngIf="current.name!='root'">
           <mat-expansion-panel-header>
             <mat-panel-title>
             <b>Odpowiedzi</b>
@@ -56,7 +65,7 @@
             </div>       
             </div>
       </mat-expansion-panel> 
-      <mat-expansion-panel>
+      <mat-expansion-panel *ngIf="current.name!='root'">
           <mat-expansion-panel-header>
             <mat-panel-title>
             <b>Zdarzenia</b>
@@ -101,13 +110,12 @@
 
     </mat-sidenav>
   
-    <mat-sidenav-content>
-        <app-chatbox #chatbox></app-chatbox>
-      <!-- <p><button mat-button (click)="sidenav.toggle()">Toggle2</button></p> -->
+    <mat-sidenav-content id="content">
+        <app-chatbox #chatbox [conversationHash]="hash"></app-chatbox>
 
       <div fxLayout="row">
-          <div class="profile m-r-20" fxFlex="540px" style="margin-left:50px;margin-top:50px">
-            <mat-card fxFlex style="height:100%; width:100%">
+          <div class="profile m-r-20"   style="margin-left:50px;margin-top:50px;" id="structure_card_div">
+            <mat-card fxFlex id="structure_card">
               <mat-card-title>Struktura</mat-card-title>
               <mat-card-content class="text-center">
                   <mat-tree [dataSource]="nestedDataSource" [treeControl]="nestedTreeControl" class="example-tree" #treeSelector>
@@ -120,66 +128,15 @@
                                   </mat-icon>
                                 </button>  	
                                 <b>{{node.id}}</b>
-                                <input type="text" class="name_input" [(ngModel)]="node.name" name="node"   (change)="update()"> 
+                                <input type="text" class="name_input" [(ngModel)]="node.name" name="node"  [disabled]="node.level==0" (change)="update()"> 
                                 
                                 <div class="operation_buttons">
                                   <div class="button_row">
                                   <button class="button_column" mat-icon-button (click)="addNewItem(node)"><mat-icon>add</mat-icon></button>
                                   <button class="button_column"  *ngIf="node.children.length ==0 && node.level!=0 " mat-icon-button (click)="remove(node)"><mat-icon>close</mat-icon></button>
-                                  <button class="button_column" *ngIf="node.level!=0 " mat-icon-button (click)="setCurrentNode(node)"><mat-icon>settings</mat-icon></button>
+                                  <button class="button_column"  mat-icon-button (click)="setCurrentNode(node)"><mat-icon>settings</mat-icon></button>
                                   </div>
                                   </div>
-                    
-                                 <!-- <mat-expansion-panel>
-                                    <mat-expansion-panel-header>
-                                      <mat-panel-title>
-                                      <b>Settings</b>
-                                      </mat-panel-title>
-                                       <mat-panel-description>
-                                      </mat-panel-description> 
-                                    </mat-expansion-panel-header>
-                                    <div class="parameters_row">
-                                   
-                                    <div class="parameters_column">
-                                        <h4>Training samples:</h4>
-                                        <input #newSample
-                                        (keyup.enter)="addSample(node,newSample.value)"
-                                        >
-                                      <button mat-icon-button (click)="addSample(node,newSample.value)"><mat-icon>add_circle_outline</mat-icon></button>
-                                      <mat-list>
-                                          <mat-list-item *ngFor="let sample of node.trainingSamples"> {{sample}}
-                                              <button  mat-icon-button (click)="removeSample(node,sample)"><mat-icon>close</mat-icon></button>
-                                          </mat-list-item>
-                                      </mat-list>
-                                    </div>
-                                  
-                                    <div class="parameters_column">
-                                      <h4>Answer samples:</h4>
-                                      <input #newAnswer
-                                      (keyup.enter)="addAnswer(node,newAnswer.value)"
-                                      >
-                                    <button mat-icon-button (click)="addAnswer(node,newAnswer.value)"><mat-icon>add_circle_outline</mat-icon></button>
-                                      <mat-list>
-                                        <mat-list-item *ngFor="let answer of node.answers"> {{answer}}
-                                            <button  mat-icon-button (click)="removeAnswer(node,answer)"><mat-icon>close</mat-icon></button>
-                                        </mat-list-item>
-                                      </mat-list>
-                                      </div>       
-                                    
-                                      <div class="parameters_column">
-                                        <h4>Events:</h4>
-                                        <input #newEvent
-                                        (keyup.enter)="addEvent(node,newEvent.value)"
-                                        >
-                                      <button mat-icon-button (click)="addEvent(node,newEvent.value)"><mat-icon>add_circle_outline</mat-icon></button>
-                                        <mat-list>
-                                          <mat-list-item *ngFor="let event of node.events"> {{event}}
-                                              <button  mat-icon-button (click)="removeEvent(node,event)"><mat-icon>close</mat-icon></button>
-                                          </mat-list-item>
-                                        </mat-list>
-                                        </div> 
-                                      </div>
-                                </mat-expansion-panel>      -->
                           </div>
                           <ul [class.example-tree-invisible]="!nestedTreeControl.isExpanded(node)">
                             <ng-container matTreeNodeOutlet></ng-container>
@@ -191,13 +148,14 @@
             </mat-card>
           </div>
       
-      
+          <div >
           <mat-card fxFlex style="margin-left:30px;margin-right:30px;margin-top:50px">
             <mat-card-title>Podgląd</mat-card-title>
             <mat-card-content>
                 <div id="chart" style="margin-left:-24px"><svg width="100%" height="200px"></svg></div>
             </mat-card-content>
           </mat-card>
+          </div>
         </div>
 
 

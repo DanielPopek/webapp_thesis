@@ -3,7 +3,7 @@
   <mat-sidenav
     #drawer
     class="sidenav"
-    fixedInViewport="true">
+    fixedInViewport="true" mode="push">
     <mat-toolbar class="toolbar">Menu</mat-toolbar>
     <mat-nav-list class="navigation">
       
@@ -14,7 +14,7 @@
   </mat-sidenav>
   <mat-sidenav-content class="sidenav-content">
     <mat-toolbar class = "lefttoolbar">
-      <button class = "item"
+      <button *ngIf="isLogged" class = "item"
         type="button"
         aria-label="Toggle sidenav"
         mat-icon-button
@@ -27,11 +27,12 @@
     <span class="fill-space"></span>
 
     <button class="logout" type="button" ng-transclude="" aria-label="menu" ng-click="$mdOpenMenu($event)" aria-haspopup="true" aria-expanded="false" aria-owns="menu_container_4">
-      <i class="material-icons ng-scope">https</i>
+      <i *ngIf="!isLogged"class="material-icons ng-scope">lock</i>
+      <i *ngIf="isLogged" class="material-icons ng-scope">lock_open</i>
       <div class="md-ripple-container" style></div></button>
 
-      <button  mat-button (click)="logout()">Wyloguj</button>
-
+      <button *ngIf="isLogged" mat-button (click)="logout()">Wyloguj</button>
+      <button *ngIf="!isLogged" mat-button (click)="login()">Zaloguj</button>
     </mat-toolbar>
     <router-outlet></router-outlet>
   </mat-sidenav-content>

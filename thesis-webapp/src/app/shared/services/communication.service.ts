@@ -32,6 +32,18 @@ export class CommunicationService {
        return result;
     }
 
+    getConversationsByDeveloperHash()
+    {
+       var result:any= this.http.get(this.rootUrl +'/conversation/designer/hash');
+       return result;
+    }
+
+    getConversationsNamesByDeveloperHash()
+    {
+       var result:any= this.http.get(this.rootUrl +'/conversation/names');
+       return result;
+    }
+
     saveRootIntentByConversationHash(hash,intent:IntentDTO)
     {
         var conversation:ConversationDTO= new ConversationDTO();
@@ -46,13 +58,29 @@ export class CommunicationService {
         return this.http.post(this.rootUrl + '/conversation/new', conversation);
     }
 
+    editConversationData(conversation:ConversationDTO)
+    {
+        return this.http.post(this.rootUrl + '/conversation/edit', conversation);
+    }
+
     getApplicationsByDeveloperId(id)
     {
        var result:any= this.http.get(this.rootUrl +'/application/'+id);
        return result;
     }
 
+    getApplicationsByDeveloperHash()
+    {
+       var result:any= this.http.get(this.rootUrl +'/application/hash');
+       return result;
+    }
+
     saveNewApplication(application:ApplicationDTO)
+    {
+        return this.http.put(this.rootUrl + '/application', application);
+    }
+
+    editApplication(application:ApplicationDTO)
     {
         return this.http.post(this.rootUrl + '/application', application);
     }

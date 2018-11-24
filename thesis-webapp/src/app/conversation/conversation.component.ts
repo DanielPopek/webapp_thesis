@@ -12,6 +12,7 @@ import { CommunicationService } from "src/app/shared/services/communication.serv
 import { ConversationDTO } from "src/app/shared/model/DTO/conversation.dto.model";
 import { ConversationDeleteDialogComponent } from "src/app/conversation-delete-dialog/conversation-delete-dialog.component";
 import { ConversationAddDialogComponent } from "src/app/conversation-add-dialog/conversation-add-dialog.component";
+import { HttpErrorResponse } from "@angular/common/http";
 
 @Component({
   selector: 'app-conversation',
@@ -29,25 +30,20 @@ export class ConversationComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  displayedColumns = ['id', 'name', 'description'];
+  displayedColumns = ['name','creationDate','lastModificationDate','description','conversationHash'];
   dataSource: ConversationListDataSource;
   showData = false;
 
-  TEMP_DESIGNER_ID:number=1; 
+  TEMP_DESIGNER_ID: number = 1;
 
-  constructor(private router: Router, public dialog: MatDialog, private communicationService: CommunicationService, private snackBar:MatSnackBar) { }
+  constructor(private router: Router, public dialog: MatDialog, private communicationService: CommunicationService, private snackBar: MatSnackBar) { }
 
   isExpansionDetailRow = (i: number, row: Object) => row.hasOwnProperty('detailRow');
   expandedElement: any;
 
   ngOnInit() {
 
-    this.communicationService.getConversationsByDeveloperId(this.TEMP_DESIGNER_ID).subscribe((data: any) => {
-      console.log(data)
-      this.showData = true;
-      localStorage.setItem('conversations', JSON.stringify(data));
-      this.dataSource = new ConversationListDataSource(this.paginator, this.sort, data);
-    });
+    this.refreshDataInList();
 
     if (localStorage.getItem('conversations') != null) {
       this.dataSource = new ConversationListDataSource(this.paginator, this.sort,
@@ -59,9 +55,8 @@ export class ConversationComponent implements OnInit {
     //this.dataSource = new ConversationListDataSource(this.paginator, this.sort, EXAMPLE_DATA);
   }
 
-  refreshDataInList()
-  {
-    this.communicationService.getConversationsByDeveloperId(this.TEMP_DESIGNER_ID).subscribe((data: any) => {
+  refreshDataInList() {
+    this.communicationService.getConversationsByDeveloperHash().subscribe((data: any) => {
       console.log(data)
       this.showData = true;
       localStorage.setItem('conversations', JSON.stringify(data));
@@ -75,16 +70,19 @@ export class ConversationComponent implements OnInit {
     this.openDeleteDialog(conversation);
   }
 
-  onEdit(conversation: any)
-  {
+  onEdit(conversation: any) {
     conversation = conversation.element;
 
     console.log(conversation);
     this.router.navigate(['/panel/' + conversation.conversationHash]);
   }
 
-  onAdd()
+  onEditData(conversation: ConversationDTO)
   {
+    this.openEditDialog(conversation);
+  }
+
+  onAdd() {
     this.openAddDialog();
   }
 
@@ -92,69 +90,102 @@ export class ConversationComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false;
     dialogConfig.autoFocus = true;
-    dialogConfig.position = {
-      top: '200px',
-      left: '600px',
-      right: '100px',
-    };
 
     dialogConfig.hasBackdrop = false;
 
-    // dialogConfig.data = {
-    //   conversation: conversation
-    // };
     dialogConfig.data = conversation;
     dialogConfig.height = '200px';
     dialogConfig.width = '400px';
 
-    const dialogRef =this.dialog.open(ConversationDeleteDialogComponent, dialogConfig);
+    const dialogRef = this.dialog.open(ConversationDeleteDialogComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(
-      data =>{this.refreshDataInList();
-      this.openSnackbar("Usunięto pozycję: ")
+      data => {
+        if (data) {
+          console.log(data.conversationHash);
+          this.communicationService.deleteConversationByConversationHash(data.conversationHash).subscribe((response: any) => {
+            this.refreshDataInList();
+            this.openSnackbar("Usunięto pozycję: " + data.name)
+          },
+            (err: HttpErrorResponse) => {
+              console.log(err);
+              this.openSnackbar('Podczas akcji wystąpił nieoczekiwany błąd')
+            })
+        }
       }
-  );  
+    );
   }
 
   openSnackbar(text) {
     let config = new MatSnackBarConfig();
     config.verticalPosition = 'top';
     config.duration = 3000;
-    config.panelClass ='snackbar' ;
-    this.snackBar.open(text, true?'Zamknij':undefined, config);
+    config.panelClass = 'snackbar';
+    this.snackBar.open(text, true ? 'Zamknij' : undefined, config);
   }
-  
+
   openAddDialog() {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = false;
     dialogConfig.autoFocus = true;
-    dialogConfig.position = {
-      top: '200px',
-      left: '600px',
-      right: '100px',
-    };
 
     dialogConfig.hasBackdrop = false;
 
-    // dialogConfig.data = {
-    //   conversation: conversation
-    // };
-
-    //dialogConfig.data = conversation;
-    dialogConfig.height = '300px';
+    dialogConfig.height = '350px';
     dialogConfig.width = '400px';
 
-    const dialogRef =this.dialog.open(ConversationAddDialogComponent, dialogConfig);
+    dialogConfig.data = null;
+
+    const dialogRef = this.dialog.open(ConversationAddDialogComponent, dialogConfig);
 
     dialogRef.afterClosed().subscribe(
-      data => 
-      {if(data)
-        {this.communicationService.saveNewConversation(data).subscribe(response=>{
-        console.log("Save endpoint called : "+response);
-        this.refreshDataInList();
-        this.openSnackbar("Dodano pozycję: "+data.name)
-      })}}
-  );  
+      data => {
+        if (data) {
+          this.communicationService.saveNewConversation(data)
+          .subscribe((response: any) => {
+            console.log("Save endpoint called : " + response);
+            this.refreshDataInList();
+            this.openSnackbar("Dodano pozycję: " + data.name)
+          },
+          (err: HttpErrorResponse) => {
+            console.log(err);
+            this.openSnackbar('Podczas zapisu wystąpił nieoczekiwany błąd')
+          })
+        }
+      }
+    );
+  }
+
+  openEditDialog(conversation: ConversationDTO) {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = false;
+    dialogConfig.autoFocus = true;
+
+    dialogConfig.hasBackdrop = false;
+
+    dialogConfig.height = '350px';
+    dialogConfig.width = '400px';
+
+    dialogConfig.data = conversation;
+
+    const dialogRef = this.dialog.open(ConversationAddDialogComponent, dialogConfig);
+
+    dialogRef.afterClosed().subscribe(
+      data => {
+        if (data) {
+          this.communicationService.editConversationData(data)
+          .subscribe((response: any) => {
+            console.log("Save endpoint called : " + response);
+            this.refreshDataInList();
+            this.openSnackbar("Nadpisano pozycję: " + data.name)
+          },
+          (err: HttpErrorResponse) => {
+            console.log(err);
+            this.openSnackbar('Podczas edycji wystąpił nieoczekiwany błąd')
+          })
+        }
+      }
+    );
   }
 
 
@@ -166,14 +197,14 @@ export class ConversationComponent implements OnInit {
 const EXAMPLE_DATA: ConversationDTO[] = [
   {
     conversationId: 1, name: '--', description: '---', root: null,
-    conversationHash: "Xi9WKcTUGxPof3q5OZyl6R0FDwMwCvw6test",
+    conversationHash: "Xi9WKcTUGxPof3q5OZyl6R0FDwMwCvw6test",lastModificationDate:'--',creationDate:'--'
   },
   {
     conversationId: 2, name: '-sada-', description: '---', root: null,
-    conversationHash: "Xi9WKcTUGxPof3q5OZyl6R0FDwMwCvw6test",
+    conversationHash: "Xi9WKcTUGxPof3q5OZyl6R0FDwMwCvw6test",lastModificationDate:'--',creationDate:'--'
   },
   {
     conversationId: 3, name: '-dsadsa-', description: '---', root: null,
-    conversationHash: "Xi9WKcTUGxPof3q5OZyl6R0FDwMwCvw6test",
+    conversationHash: "Xi9WKcTUGxPof3q5OZyl6R0FDwMwCvw6test",lastModificationDate:'--',creationDate:'--'
   },
 ];

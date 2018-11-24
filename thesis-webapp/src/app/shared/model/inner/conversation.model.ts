@@ -4,4 +4,6 @@ export class Conversation
   conversationId:number;
   conversationHash:string;
   description:string;
+  lastModificationDate:string;
+  creationDate:string;
 }

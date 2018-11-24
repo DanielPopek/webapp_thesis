@@ -14,6 +14,7 @@ import { MatSnackBarConfig } from "@angular/material/snack-bar";
 import { ChatboxComponent } from "src/app/chatbox/chatbox.component";
 import { Input } from "@angular/core";
 import { MatSidenav } from "@angular/material/sidenav";
+import { HttpErrorResponse } from "@angular/common/http";
 
 
 @Component({
@@ -24,17 +25,16 @@ import { MatSidenav } from "@angular/material/sidenav";
 })
 export class DesignPanelComponent implements OnInit {
 
-   TEMP_CONV_ID:string='Xi9WKcTUGxPof3q5OZyl6R0FDwMwCvw6test'; 
-   hash;
-   current;
-
-   @Input() chatbox: ChatboxComponent;
+  TEMP_CONV_ID:string='Xi9WKcTUGxPof3q5OZyl6R0FDwMwCvw6test'; 
+  hash;
+  current;
 
   @ViewChild('treeSelector') tree: any;
   @ViewChild('sidenav') sidenav: MatSidenav;
+  @ViewChild(ChatboxComponent) chatbox:ChatboxComponent;
   
-    nestedTreeControl: NestedTreeControl<Intent>;
-    nestedDataSource: MatTreeNestedDataSource<Intent>;
+  nestedTreeControl: NestedTreeControl<Intent>;
+  nestedDataSource: MatTreeNestedDataSource<Intent>;
 
 
   //for D3 js purposes 
@@ -74,15 +74,21 @@ export class DesignPanelComponent implements OnInit {
         console.log(this.database.convertDTOtoIntent(data));
         this.database.readData(this.database.convertDTOtoIntent(data));
         this.loadTreeDiagram();
+        this.nestedTreeControl.expand(this.root);
       });
       
     }
 
     saveConversation()
     {
-      this.communicationService.saveRootIntentByConversationHash(this.hash,this.database.getStorageAsDTO()).subscribe((data) => {
+      this.communicationService.saveRootIntentByConversationHash(this.hash,this.database.getStorageAsDTO()).subscribe((data : any)=>{
         console.log(data)
         this.openSnackbar('Konwersacja została poprawnie zapisana w bazie danych')
+        this.chatbox.reset();
+      },
+      (err : HttpErrorResponse)=>{
+        console.log(err);
+        this.openSnackbar('Podczas zapisu wystąpił nieoczekiwany błąd')
       });
     }
 
@@ -99,7 +105,6 @@ export class DesignPanelComponent implements OnInit {
       this.sidenav.toggle();
     }
 
-    //TODO -IMPORVE UPDATE !!!
     update()
     {
       this.renderChanges()

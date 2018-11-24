@@ -78,7 +78,7 @@ import { BaseLayoutComponent, BaseLayoutModule } from './shared/layouts';
     TreeDiagram
   ],
   exports: [
-    FlexLayoutModule
+    FlexLayoutModule,ChatboxComponent
   ],
   providers: [UserService,CommunicationService, AuthGuard,
 

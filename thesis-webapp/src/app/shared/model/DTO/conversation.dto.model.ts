@@ -7,4 +7,6 @@ export class ConversationDTO
   conversationHash:string;
   root:IntentDTO;
   description:string;
+  lastModificationDate:string;
+  creationDate:string;
 }

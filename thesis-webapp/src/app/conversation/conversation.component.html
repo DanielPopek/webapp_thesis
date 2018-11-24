@@ -3,30 +3,41 @@
         <span>Konwersacje</span>
       </mat-toolbar>
   <mat-table #table [dataSource]="dataSource"  matSort aria-label="Elements">
-
-          <ng-container matColumnDef="id" >
-            <mat-header-cell *matHeaderCellDef  mat-sort-header> No. </mat-header-cell>
-            <mat-cell *matCellDef="let element"> {{element.conversationId}} </mat-cell>
-          </ng-container>
-      
-          
+     
           <ng-container matColumnDef="name" >
             <mat-header-cell *matHeaderCellDef mat-sort-header> Nazwa </mat-header-cell>
             <mat-cell *matCellDef="let element"> {{element.name}} </mat-cell>
           </ng-container>
       
+          <ng-container matColumnDef="creationDate" >
+            <mat-header-cell *matHeaderCellDef  mat-sort-header> Data utworzenia </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.creationDate}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="lastModificationDate" >
+            <mat-header-cell *matHeaderCellDef  mat-sort-header> Data modyfikacji </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.lastModificationDate}} </mat-cell>
+          </ng-container>
           
           <ng-container matColumnDef="description">
             <mat-header-cell *matHeaderCellDef  mat-sort-header> Opis </mat-header-cell>
             <mat-cell *matCellDef="let element"> {{element.description}} </mat-cell>
           </ng-container>
 
+          <ng-container matColumnDef="conversationHash" >
+            <mat-header-cell *matHeaderCellDef  mat-sort-header> Token </mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{element.conversationHash}} </mat-cell>
+          </ng-container>
+
      <ng-container matColumnDef="expandedDetail">
       <mat-cell *matCellDef="let element" style =  "display: flex;justify-content: flex-end;" > 
 <!-- Action buttons -->
       <button mat-button (click)="onEdit(element)">
-      <mat-icon>edit</mat-icon>
+      <mat-icon>settings</mat-icon>
       </button>
+      <button mat-button (click)="onEditData(element)">
+          <mat-icon>edit</mat-icon>
+          </button>
       <button mat-button (click)="onDelete(element)">
      <mat-icon>delete</mat-icon>
       </button>

@@ -3,6 +3,7 @@ import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { CommunicationService } from "src/app/shared/services/communication.service";
 import { MatSnackBarConfig } from "@angular/material/snack-bar";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { Input } from "@angular/core";
 
 const randomMessages = [
   'OK',
@@ -11,6 +12,14 @@ const randomMessages = [
 ];
 const rand = max => Math.floor(Math.random() * max);
 const getRandomMessage = () => randomMessages[rand(randomMessages.length)];
+
+const INITIAL_CONTEXT:any={
+  "intentHash":"",
+  "message": "",
+  "events": [],
+  "data": null
+}
+
 @Component({
   selector: 'app-chatbox',
   templateUrl: './chatbox.component.html',
@@ -20,18 +29,13 @@ export class ChatboxComponent implements OnInit {
   @ViewChild('message') message: ElementRef;
   @ViewChild('bottom') bottom: ElementRef;
 
+  @Input() conversationHash: number;
+
   visible = false;
 
-  conversation="";
 
-  conversationHash="ec9d61fb-d108-44f0-920f-7ee07c0972a2";
 
-  context:any={
-    "intentHash":"",
-    "message": "",
-    "event": null,
-    "data": null
-  }
+  context:any;
 
   operator = {
     name: 'Chatrooster',
@@ -50,27 +54,34 @@ export class ChatboxComponent implements OnInit {
   constructor(private communicationService:CommunicationService, private snackBar:MatSnackBar) {}
 
   ngOnInit() {
+    this.context=INITIAL_CONTEXT;
     setTimeout(() => {
       this.addMessage(
         this.operator,
-        'Próbne okno czatu',
+        'Próbne okno czatu. Możesz przetestować moje zachowanie :)',
         'received'
       );
     }, 1500);
+    console.log(this.conversationHash)
+  }
+
+  reset()
+  {
+    this.messages=[]
+    this.context=INITIAL_CONTEXT;
   }
 
   openSnackbar(text) {
     let config = new MatSnackBarConfig();
     config.verticalPosition = 'top';
-    config.duration = 1500;
+    config.duration = 2500;
     config.panelClass ='snackbar' ;
-    this.snackBar.open("Zdarzenie: "+text, true?'Zamknij':undefined, config);
+    this.snackBar.open("Zdarzenia: "+text, true?'Zamknij':undefined, config);
   }
 
-  setConversation(hash)
+  hey(text)
   {
-    this.conversation=hash;
-    console.log(this.conversation);
+    console.log(text);
   }
 
   addMessage(from, text, type: 'received' | 'sent') {
@@ -104,8 +115,13 @@ export class ChatboxComponent implements OnInit {
       console.log(data)
       this.context=data;
       this.addMessage(this.operator, this.context.message, 'received');
-      if(this.context.event!=null)
-        this.openSnackbar(this.context.event)
+      if(this.context.events!=null)
+        {
+        //   for (let entry of this.context.events) {
+        //     this.openSnackbar(entry)
+        //  }
+        this.openSnackbar(this.context.events)
+        }
     });
   }
 

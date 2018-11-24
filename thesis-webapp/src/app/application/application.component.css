@@ -41,3 +41,7 @@ h2.page-header
 {
   text-align: center;
 }
+
+.mat-cell{
+  word-break: break-word;
+}

@@ -31,9 +31,9 @@ export class ConversationDeleteDialogComponent implements OnInit {
   }
 
   delete() {
-      this.communicationService.deleteConversationByConversationHash(this.conversaton.conversationHash).subscribe((data: any) => {
-    });
-   this.dialogRef.close(null);
+    //   this.communicationService.deleteConversationByConversationHash(this.conversaton.conversationHash).subscribe((data: any) => {
+    // });
+   this.dialogRef.close(this.conversaton);
   }
 
   close() {

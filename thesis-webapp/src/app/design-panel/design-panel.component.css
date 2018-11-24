@@ -99,5 +99,35 @@ color:#4b9831;
   /* overflow: */
 }
 
+/* .mat-sidenav-content[_ngcontent-c16] {
+  overflow: hidden;
+} */
 
+#content{
+  overflow-y: hidden;
+}
+
+.titlebox_sidenav{
+  /* display: flex; */
+  height: 100px;
+}
+
+.titlebox_name{
+  margin-left: 10px;
+  float:left;
+}
+
+.titlebox_icon{
+  margin-top: 20px;
+  float:right;
+}
+
+#structure_card{
+  min-width: 480px;
+}
+
+#structure_card_div{
+  max-width: unset;
+  min-width: max-content;
+}
 

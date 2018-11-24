@@ -85,7 +85,9 @@ export class ConversationListDataSource extends DataSource<ConversationDTO> {
       switch (this.sort.active) {
         case 'name': return compare(a.name, b.name, isAsc);
         case 'description': return compare(a.description, b.description, isAsc);
-        case 'id': return compare(+a.conversationId, +b.conversationId, isAsc);
+        case 'lastModificationDate': return compare(+a.lastModificationDate, +b.lastModificationDate, isAsc);
+        case 'creationDate': return compare(+a.creationDate, +b.creationDate, isAsc);
+        case 'conversationHash': return compare(+a.conversationHash, +b.conversationHash, isAsc);
         default: return 0;
      }
     });

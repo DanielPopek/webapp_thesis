@@ -1,34 +1,27 @@
 <h2 mat-dialog-title>{{name}}</h2>
 <mat-dialog-content [formGroup]="form">
 
-     <mat-form-field>
-      <input matInput
-      placeholder="Nazwa"
-     formControlName="name">
+    <mat-form-field>
+        <input matInput placeholder="Nazwa" formControlName="name" maxlength="50">
     </mat-form-field>
     <mat-form-field>
 
-        <input matInput
-                placeholder="Opis"
-               formControlName="description">
-
+        <textarea matInput placeholder="Opis" formControlName="description" maxlength="200"> </textarea>
     </mat-form-field>
     <mat-form-field>
-            <mat-select placeholder="Powiązane konwersacje" [formControl]="selections" multiple>
-                    <mat-option *ngFor="let selection of selectionsList" [value]="selection">{{selection}}</mat-option>
-            </mat-select>       
+        <mat-select placeholder="Powiązane konwersacje" [formControl]="selections" multiple>
+            <mat-option *ngFor="let selection of selectionsList" [value]="selection">{{selection}}</mat-option>
+        </mat-select>
     </mat-form-field>
 </mat-dialog-content>
 
 <mat-dialog-actions>
 
-    <button class="mat-raised-button"
-            (click)="close()">
+    <button class="mat-raised-button" (click)="close()">
         Zamknij
     </button>
 
-    <button class="mat-raised-button mat-primary"
-            (click)="save()">
+    <button class="mat-raised-button mat-primary" (click)="save()">
         Zapisz
     </button>
 

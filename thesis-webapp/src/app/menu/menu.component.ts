@@ -8,13 +8,21 @@ import { Router } from "@angular/router";
 })
 export class MenuComponent implements OnInit {
 
+  isLogged:boolean=localStorage.getItem('userToken')!=null;
   constructor(private router: Router) { }
 
   ngOnInit() {
+    // this.isLogged=localStorage.getItem('userToken')!=null;
   }
 
   logout() {
     localStorage.removeItem('userToken');
+    this.isLogged=false;
+    this.router.navigate(['/login']);
+  }
+
+  login()
+  {
     this.router.navigate(['/login']);
   }
 
