@@ -5,16 +5,14 @@ import { Observable, of as observableOf, merge } from 'rxjs';
 import { ConversationDTO } from "src/app/shared/model/DTO/conversation.dto.model";
 
 export class ConversationListDataSource extends DataSource<ConversationDTO> {
-  
- 
+
+
 
 
   constructor(private paginator: MatPaginator, private sort: MatSort, private dataSource: ConversationDTO[]) {
     super();
 
   }
-
-  
 
   /**
    * Connect this data source to the table. The table will only update when
@@ -36,39 +34,31 @@ export class ConversationListDataSource extends DataSource<ConversationDTO> {
 
     // Set the paginators length
     this.paginator.length = this.dataSource.length;
-    
+
     //data.forEach(element => rows.push(element, { detailRow: true, element }));
 
     return merge(...dataMutations).pipe(map(() => {
       return this.getPagedData(this.getSortedData([...this.dataSource]));
     }));
-    
-   /*
-    const rows = [];
-    this.data.forEach(element => rows.push(element, { detailRow: true, element }));
-    console.log(rows);
-    return observableOf(rows);
-  */
 
   }
-
 
 
   /**
    *  Called when the table is being destroyed. Use this function, to clean up
    * any open connections or free any held resources that were set up during connect.
    */
-  disconnect() {}
+  disconnect() { }
 
   /**
    * Paginate the data (client-side). If you're using server-side pagination,
    * this would be replaced by requesting the appropriate data from the server.
    */
   private getPagedData(data: ConversationDTO[]) {
-    const startIndex = this.paginator.pageIndex * (this.paginator.pageSize*2);
+    const startIndex = this.paginator.pageIndex * (this.paginator.pageSize * 2);
     const rows = [];
     data.forEach(element => rows.push(element, { detailRow: true, element }));
-    return rows.splice(startIndex, (this.paginator.pageSize*2));
+    return rows.splice(startIndex, (this.paginator.pageSize * 2));
   }
 
   /**
@@ -80,8 +70,8 @@ export class ConversationListDataSource extends DataSource<ConversationDTO> {
       return data;
     }
 
-   return data.sort((a, b) => {
-     const isAsc = this.sort.direction === 'asc';
+    return data.sort((a, b) => {
+      const isAsc = this.sort.direction === 'asc';
       switch (this.sort.active) {
         case 'name': return compare(a.name, b.name, isAsc);
         case 'description': return compare(a.description, b.description, isAsc);
@@ -89,7 +79,7 @@ export class ConversationListDataSource extends DataSource<ConversationDTO> {
         case 'creationDate': return compare(+a.creationDate, +b.creationDate, isAsc);
         case 'conversationHash': return compare(+a.conversationHash, +b.conversationHash, isAsc);
         default: return 0;
-     }
+      }
     });
   }
 }

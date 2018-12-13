@@ -30,7 +30,7 @@ export class ConversationComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  displayedColumns = ['name','creationDate','lastModificationDate','description','conversationHash'];
+  displayedColumns = ['name', 'creationDate', 'lastModificationDate', 'description', 'conversationHash'];
   dataSource: ConversationListDataSource;
   showData = false;
 
@@ -77,8 +77,7 @@ export class ConversationComponent implements OnInit {
     this.router.navigate(['/panel/' + conversation.conversationHash]);
   }
 
-  onEditData(conversation: ConversationDTO)
-  {
+  onEditData(conversation: ConversationDTO) {
     this.openEditDialog(conversation);
   }
 
@@ -142,15 +141,15 @@ export class ConversationComponent implements OnInit {
       data => {
         if (data) {
           this.communicationService.saveNewConversation(data)
-          .subscribe((response: any) => {
-            console.log("Save endpoint called : " + response);
-            this.refreshDataInList();
-            this.openSnackbar("Dodano pozycję: " + data.name)
-          },
-          (err: HttpErrorResponse) => {
-            console.log(err);
-            this.openSnackbar('Podczas zapisu wystąpił nieoczekiwany błąd')
-          })
+            .subscribe((response: any) => {
+              console.log("Save endpoint called : " + response);
+              this.refreshDataInList();
+              this.openSnackbar("Dodano pozycję: " + data.name)
+            },
+            (err: HttpErrorResponse) => {
+              console.log(err);
+              this.openSnackbar('Podczas zapisu wystąpił nieoczekiwany błąd')
+            })
         }
       }
     );
@@ -174,15 +173,15 @@ export class ConversationComponent implements OnInit {
       data => {
         if (data) {
           this.communicationService.editConversationData(data)
-          .subscribe((response: any) => {
-            console.log("Save endpoint called : " + response);
-            this.refreshDataInList();
-            this.openSnackbar("Nadpisano pozycję: " + data.name)
-          },
-          (err: HttpErrorResponse) => {
-            console.log(err);
-            this.openSnackbar('Podczas edycji wystąpił nieoczekiwany błąd')
-          })
+            .subscribe((response: any) => {
+              console.log("Save endpoint called : " + response);
+              this.refreshDataInList();
+              this.openSnackbar("Nadpisano pozycję: " + data.name)
+            },
+            (err: HttpErrorResponse) => {
+              console.log(err);
+              this.openSnackbar('Podczas edycji wystąpił nieoczekiwany błąd')
+            })
         }
       }
     );
@@ -197,14 +196,14 @@ export class ConversationComponent implements OnInit {
 const EXAMPLE_DATA: ConversationDTO[] = [
   {
     conversationId: 1, name: '--', description: '---', root: null,
-    conversationHash: "Xi9WKcTUGxPof3q5OZyl6R0FDwMwCvw6test",lastModificationDate:'--',creationDate:'--'
+    conversationHash: "Xi9WKcTUGxPof3q5OZyl6R0FDwMwCvw6test", lastModificationDate: '--', creationDate: '--'
   },
   {
     conversationId: 2, name: '-sada-', description: '---', root: null,
-    conversationHash: "Xi9WKcTUGxPof3q5OZyl6R0FDwMwCvw6test",lastModificationDate:'--',creationDate:'--'
+    conversationHash: "Xi9WKcTUGxPof3q5OZyl6R0FDwMwCvw6test", lastModificationDate: '--', creationDate: '--'
   },
   {
     conversationId: 3, name: '-dsadsa-', description: '---', root: null,
-    conversationHash: "Xi9WKcTUGxPof3q5OZyl6R0FDwMwCvw6test",lastModificationDate:'--',creationDate:'--'
+    conversationHash: "Xi9WKcTUGxPof3q5OZyl6R0FDwMwCvw6test", lastModificationDate: '--', creationDate: '--'
   },
 ];

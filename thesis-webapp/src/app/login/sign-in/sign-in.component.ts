@@ -12,10 +12,10 @@ import { Validators } from "@angular/forms";
   styleUrls: ['./sign-in.component.css']
 })
 export class SignInComponent implements OnInit {
-  isLoginError : boolean = false;
-  errorMessage='';
-  ERROR_MESSAGE_WRONG_DATA="Podano niepoprany login lub hasło";
-  ERROR_MESSAGE_ACCOUNT_NOT_ACTIVE="Konto jest nieaktywne";
+  isLoginError: boolean = false;
+  errorMessage = '';
+  ERROR_MESSAGE_WRONG_DATA = "Podano niepoprany login lub hasło";
+  ERROR_MESSAGE_ACCOUNT_NOT_ACTIVE = "Konto jest nieaktywne";
   userForm: FormGroup;
   formErrors = {
     email: '',
@@ -35,10 +35,10 @@ export class SignInComponent implements OnInit {
   };
 
   constructor(
-    private userService : UserService,
+    private userService: UserService,
     private router: Router,
     private fb: FormBuilder,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.buildForm();
@@ -83,19 +83,19 @@ export class SignInComponent implements OnInit {
   }
 
   signInWithEmail() {
-     this.userService.userAuthentication(this.userForm.value['email'],this.userForm.value['password']).subscribe((data : any)=>{
-      localStorage.setItem('userToken',data.apiKey);
+    this.userService.userAuthentication(this.userForm.value['email'], this.userForm.value['password']).subscribe((data: any) => {
+      localStorage.setItem('userToken', data.apiKey);
       console.log(data.apiKey)
       this.router.navigate(['/']);
     },
-    (err : HttpErrorResponse)=>{
-      this.isLoginError = true;
-      console.log(err);
-      if(err.error.message==="USER IS NOT ACTIVE")
-        this.errorMessage=this.ERROR_MESSAGE_ACCOUNT_NOT_ACTIVE;
-      else this.errorMessage=this.ERROR_MESSAGE_WRONG_DATA;
-      
-    });
+      (err: HttpErrorResponse) => {
+        this.isLoginError = true;
+        console.log(err);
+        if (err.error.message === "USER IS NOT ACTIVE")
+          this.errorMessage = this.ERROR_MESSAGE_ACCOUNT_NOT_ACTIVE;
+        else this.errorMessage = this.ERROR_MESSAGE_WRONG_DATA;
+
+      });
   }
 
   login() {

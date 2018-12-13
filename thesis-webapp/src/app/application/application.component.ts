@@ -162,7 +162,7 @@ openEditDialog(application:ApplicationDTO) {
           .subscribe((response: any) => {
             console.log("Save endpoint called : " + response);
             this.refreshDataInList();
-            this.openSnackbar("Dodano pozycję: " + data.name)
+            this.openSnackbar("Nadpisano pozycję: " + data.name)
           },
           (err: HttpErrorResponse) => {
             console.log(err);

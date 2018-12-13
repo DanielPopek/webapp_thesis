@@ -6,51 +6,7 @@
     <div class="register-header" fxLayout="column" fxLayoutAlign="center center">
         <i class="material-icons" style="font-size:30px;vertical-align: bottom;">person_add</i>&nbsp;&nbsp;Rejestracja
     </div>
-    <!-- <form #form="ngForm" (ngSubmit)="OnSubmit()">
 
-        
-      <div class="register-content" fxLayout="column" fxLayoutAlign="start stretch">
-
-        <mat-form-field>
-          <input matInput placeholder="Imię" type="text" name="name" required [(ngModel)]="user.FirstName">
-        </mat-form-field>
-
-        <mat-form-field>
-            <input matInput placeholder="Nazwisko" type="text" name="surname" required [(ngModel)]="user.LastName">
-          </mat-form-field>
-
-
-        <mat-form-field>
-          <input matInput placeholder="Email" type="email" name="email" required [(ngModel)]="user.Email">
-        </mat-form-field>
-
-        <mat-form-field>
-          <input matInput placeholder="Hasło" type="password" name="password" required [(ngModel)]="user.Password">
-        </mat-form-field>
-
-        <mat-form-field>
-          <input matInput placeholder="Potwierdź hasło" type="password" name="password-confirm" required [(ngModel)]="passwordConfirm" (change)="onConfirmChange(event)">
-        </mat-form-field>
-
-        <mat-form-field>
-            <mat-select [(value)]="selected" name="type">
-              <mat-option value="1">1</mat-option>
-              <mat-option value="2">2</mat-option>
-              <mat-option value="3">3</mat-option>
-            </mat-select>
-          </mat-form-field>
-              
-        <div class="extra-options" fxLayout="row" fxLayoutAlign="center center">
-          <mat-checkbox  class="remember-me" (change)="onChange($event)">Zapoznałem/am się z &nbsp; </mat-checkbox>
-          <a href="#" target="_blank">warunkami korzystania z serwisu</a>
-        </div>
-        <div *ngIf="isError" style="color:#f44336;margin-bottom:30px">
-          <i class="material-icons">error</i> {{errorMessage}}
-      </div>
-        <button color="primary" id="register_button" mat-raised-button [disabled]="(!form.valid)||!isChecked">Zarejestruj</button>
-        <p class="note">Masz już konto?<br/> <a [routerLink]="['/login']">Przejdź do strony logowania</a></p>
-      </div>
-    </form> -->
     <mat-card>
       <mat-card-content id="form_card">
     <form [formGroup]="registerForm" (ngSubmit)="register()">

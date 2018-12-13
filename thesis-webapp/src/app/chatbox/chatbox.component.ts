@@ -5,13 +5,13 @@ import { MatSnackBarConfig } from "@angular/material/snack-bar";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { Input } from "@angular/core";
 
-const randomMessages = [
-  'OK',
-  'SUPER',
-  ':)'
-];
-const rand = max => Math.floor(Math.random() * max);
-const getRandomMessage = () => randomMessages[rand(randomMessages.length)];
+// const randomMessages = [
+//   'OK',
+//   'SUPER',
+//   ':)'
+// ];
+// const rand = max => Math.floor(Math.random() * max);
+// const getRandomMessage = () => randomMessages[rand(randomMessages.length)];
 
 const INITIAL_CONTEXT:any={
   "intentHash":"",
@@ -32,9 +32,6 @@ export class ChatboxComponent implements OnInit {
   @Input() conversationHash: number;
 
   visible = false;
-
-
-
   context:any;
 
   operator = {
@@ -100,9 +97,9 @@ export class ChatboxComponent implements OnInit {
     }
   }
 
-  randomMessage() {
-    this.addMessage(this.operator, getRandomMessage(), 'received');
-  }
+  // randomMessage() {
+  //   this.addMessage(this.operator, getRandomMessage(), 'received');
+  // }
 
   sendMessage({ message }) {
     if (message.trim() === '') {

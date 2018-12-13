@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Response, RequestOptions } from "@angular/http";
 import { Observable } from 'rxjs';
-// import 'rxjs/add/operator/map';
 import { User } from "src/app/shared/model/user.model";
 
 
@@ -28,13 +27,4 @@ export class UserService {
     var reqHeader = new HttpHeaders({ 'Content-Type': 'application/json', 'No-Auth': 'True' });
     return this.http.post(this.rootUrl + '/authentication/login', data, { headers: reqHeader });
   }
-
-      // getPatientsOfSupervisor(){
-    //     var apiKey = localStorage.getItem('userToken');
-    //     console.log('Service');
-    //     console.log(apiKey);
-    //     var reqHeader = new HttpHeaders({'Content-Type': 'application/json','No-Auth':'True', 'Authorization': apiKey });
-    //     //reqHeader.set('Authorization', apiKey );
-    //     return  this.http.get(this.rootUrl +'/supervisor/patients',{ headers: reqHeader });
-    //   }
 }

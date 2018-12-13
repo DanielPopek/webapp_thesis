@@ -1,8 +1,3 @@
-/**
- * @license
- * Copyright Stbui All Rights Reserved.
- */
-
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {

@@ -8,7 +8,7 @@ import { Router } from "@angular/router";
 })
 export class MenuComponent implements OnInit {
 
-  isLogged:boolean=localStorage.getItem('userToken')!=null;
+  isLogged: boolean = localStorage.getItem('userToken') != null;
   constructor(private router: Router) { }
 
   ngOnInit() {
@@ -17,12 +17,11 @@ export class MenuComponent implements OnInit {
 
   logout() {
     localStorage.removeItem('userToken');
-    this.isLogged=false;
+    this.isLogged = false;
     this.router.navigate(['/login']);
   }
 
-  login()
-  {
+  login() {
     this.router.navigate(['/login']);
   }
 

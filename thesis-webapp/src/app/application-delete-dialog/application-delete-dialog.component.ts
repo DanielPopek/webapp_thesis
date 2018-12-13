@@ -29,7 +29,6 @@ export class ApplicationDeleteDialogComponent implements OnInit {
   }
 
   delete() {
-      // this.communicationService.deleteApplicationByApplicationToken(this.application.token).subscribe((data: any) => {});
    this.dialogRef.close(this.application);
   }
 
