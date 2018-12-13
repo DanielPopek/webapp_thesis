@@ -7,7 +7,6 @@
           <span class="operator-status-online">●</span>
           <button class="chat-button-header" (click)="toggleChat()">✕</button>
         </div>
-        <!-- <img [attr.src]="operator.avatar" class="avatar" /> -->
         <h3 class="operator-name">
           {{operator.name}}
         </h3>
@@ -32,7 +31,7 @@
       </ng-container>
     </div>
     <div class="chat-box-footer">
-      <textarea type="text" class="chat-input-text" placeholder="Input" #message (keydown.enter)="onSubmit()" (keyup.enter)="message.value = ''"
+      <textarea type="text" class="chat-input-text" placeholder="Wiadomość" #message (keydown.enter)="onSubmit()" (keyup.enter)="message.value = ''"
         (keyup.escape)="dismiss.emit()"></textarea>
       <button type="submit" class="chat-input-submit" (click)="onSubmit()">↩︎</button>
     </div>
