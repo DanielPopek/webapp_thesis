@@ -1,5 +1,5 @@
 import { NestedTreeControl } from '@angular/cdk/tree';
-import { Component, Injectable, ViewChild,OnInit  } from '@angular/core';
+import { Component, Injectable, ViewChild, OnInit } from '@angular/core';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { BehaviorSubject } from 'rxjs';
 import { Intent } from "src/app/shared/model/inner/intent.model";
@@ -20,80 +20,74 @@ export class IntentStorage {
   }
 
 
-//initial data 
-  treeData = [{ "id": "0", "level": 0, "name": "root", "parentId": null, "events":[],"misunderstandingStatements":[], "answers":["answer1","answer2","answer3"],"trainingSamples":["train1","train2"], "children": [{ "id": "1.1", "level": 1, "name": "child1", "parentId": "0", "events":[], "answers":["answer1","answer2","answer3"],"trainingSamples":["train1","train2"], "children": [] }] }] as Intent[];
- 
+  //initial data 
+  treeData = [{ "id": "0", "level": 0, "name": "root", "parentId": null, "events": [], "misunderstandingStatements": [], "answers": ["answer1", "answer2", "answer3"], "trainingSamples": ["train1", "train2"], "children": [{ "id": "1.1", "level": 1, "name": "child1", "parentId": "0", "events": [], "answers": ["answer1", "answer2", "answer3"], "trainingSamples": ["train1", "train2"], "children": [] }] }] as Intent[];
+
   initialize() {
     const data = this.treeData;
     console.log(this.data);
     this.dataChange.next(data);
   }
 
-  readData(intents:Intent[])
-  {
+  readData(intents: Intent[]) {
     const data = intents;
     console.log(this.data);
     this.dataChange.next(data);
   }
 
-  inform()
-  {
+  inform() {
     this.dataChange.next(this.data);
   }
 
-  convertDTOtoIntent(dto:IntentDTO)
-  {
-    return [this.convertDTOtoIntentRecursively(dto,"0",0,null)];
+  convertDTOtoIntent(dto: IntentDTO) {
+    return [this.convertDTOtoIntentRecursively(dto, "0", 0, null)];
   }
 
-  convertDTOtoIntentRecursively(dto:IntentDTO, id:string,level:number, parentId:string)
-  {
-    var intent:Intent = new Intent();
-    intent.trainingSamples=dto.trainingSamples;
-    intent.answers=dto.answerSamples;
-    intent.events=dto.events;
-    intent.misunderstandingStatements=dto.misunderstandingStatements;
-    intent.name=dto.name;
-    intent.level=level;
-    intent.parentId=parentId;
-    intent.id=id;
-    intent.children=[]
-    var childArray:Intent[];
-      var num:number = 0; 
-      var i:number; 
-      
-      for(i = num;i<dto.subintents.length;i++) {
-         var child=dto.subintents[i];
-        //  var childIntent:Intent=this.convertDTOtoIntentRecursively(child,level+1+ ((i + 1) / 10.0),level+1,id)
-        var childIntent:Intent=this.convertDTOtoIntentRecursively(child,id+'.'+(i+1),level+1,id)
-         intent.children.push(childIntent);
-      }
-      return intent;
+  convertDTOtoIntentRecursively(dto: IntentDTO, id: string, level: number, parentId: string) {
+    var intent: Intent = new Intent();
+    intent.trainingSamples = dto.trainingSamples;
+    intent.answers = dto.answerSamples;
+    intent.events = dto.events;
+    intent.misunderstandingStatements = dto.misunderstandingStatements;
+    intent.name = dto.name;
+    intent.level = level;
+    intent.parentId = parentId;
+    intent.id = id;
+    intent.children = []
+    var childArray: Intent[];
+    var num: number = 0;
+    var i: number;
+
+    for (i = num; i < dto.subintents.length; i++) {
+      var child = dto.subintents[i];
+      //  var childIntent:Intent=this.convertDTOtoIntentRecursively(child,level+1+ ((i + 1) / 10.0),level+1,id)
+      var childIntent: Intent = this.convertDTOtoIntentRecursively(child, id + '.' + (i + 1), level + 1, id)
+      intent.children.push(childIntent);
+    }
+    return intent;
   }
 
-  convertIntentToDTO(intent:Intent)
-  {
-    var dto:IntentDTO = new IntentDTO();
-    dto.trainingSamples=intent.trainingSamples;
-    dto.answerSamples=intent.answers;
-    dto.events=intent.events;
-    dto.misunderstandingStatements=intent.misunderstandingStatements;
-    dto.name=intent.name;
-    dto.subintents=[]
-    var childArray:IntentDTO[];
-      var num:number = 0; 
-      var i:number; 
-      
-      for(i = num;i<intent.children.length;i++) {
-         var child=intent.children[i];
-         var childIntent:IntentDTO=this.convertIntentToDTO(child);
-         dto.subintents.push(childIntent);
-      }
-      return dto;
+  convertIntentToDTO(intent: Intent) {
+    var dto: IntentDTO = new IntentDTO();
+    dto.trainingSamples = intent.trainingSamples;
+    dto.answerSamples = intent.answers;
+    dto.events = intent.events;
+    dto.misunderstandingStatements = intent.misunderstandingStatements;
+    dto.name = intent.name;
+    dto.subintents = []
+    var childArray: IntentDTO[];
+    var num: number = 0;
+    var i: number;
+
+    for (i = num; i < intent.children.length; i++) {
+      var child = intent.children[i];
+      var childIntent: IntentDTO = this.convertIntentToDTO(child);
+      dto.subintents.push(childIntent);
+    }
+    return dto;
   }
 
-  getStorageAsDTO()
-  {
+  getStorageAsDTO() {
     console.log(this.convertIntentToDTO(this.data[0]))
     return this.convertIntentToDTO(this.data[0]);
   }
@@ -103,9 +97,6 @@ export class IntentStorage {
    * The return value is the list of `FileNode`.
    */
   buildFileTree(obj: object, level: number): Intent[] {
-    // @pankaj This should recive Root node of Tree of Type FileNode
-    // so we dont have to create a new node and use it as it is
-    //console.log(obj);
     return Object.keys(obj).reduce<Intent[]>((accumulator, key) => {
       // console.log(key);
       const value = obj[key];
@@ -119,7 +110,7 @@ export class IntentStorage {
         if (typeof value === 'object') {
           node.children = this.buildFileTree(value, level + 1);
         } else {
-         // node.type = value;
+          // node.type = value;
         }
       }
 
@@ -133,29 +124,29 @@ export class IntentStorage {
       //console.log("insert ")
 
       //if (parent.type !== 'SECTION') {
-        let newNode: Intent;
-        newNode = new Intent();
-        newNode.name = name;
-        newNode.children = [];
-        newNode.answers=[];
-        newNode.trainingSamples=[];
-        newNode.events=[];
-        newNode.misunderstandingStatements=[];
-        newNode.level = parent.level + 1;
-        console.log(newNode.level);
-        newNode.parentId = parent.id;
-        // newNode.id = newNode.level + ((parent.children.length + 1) / 10.0);
-        newNode.id = parent.id + '.'+(parent.children.length + 1);
+      let newNode: Intent;
+      newNode = new Intent();
+      newNode.name = name;
+      newNode.children = [];
+      newNode.answers = [];
+      newNode.trainingSamples = [];
+      newNode.events = [];
+      newNode.misunderstandingStatements = [];
+      newNode.level = parent.level + 1;
+      console.log(newNode.level);
+      newNode.parentId = parent.id;
+      // newNode.id = newNode.level + ((parent.children.length + 1) / 10.0);
+      newNode.id = parent.id + '.' + (parent.children.length + 1);
 
-        console.log(parent.children.length);
-        console.log(newNode.id);
+      console.log(parent.children.length);
+      console.log(newNode.id);
 
-        parent.children.push(newNode);
-        this.parentNodeMap.set(newNode, parent);
-        //console.log(newNode);
+      parent.children.push(newNode);
+      this.parentNodeMap.set(newNode, parent);
+      //console.log(newNode);
 
       //} else {
-        console.log("No More Nodes can be inserted");
+      console.log("No More Nodes can be inserted");
       //}
       //this.dataChange.next(this.data);
     }
@@ -163,6 +154,8 @@ export class IntentStorage {
   }
   public removeItem(currentNode: Intent, root: Intent) {
     //const parentNode = this.parentNodeMap.get(currentNode);
+    console.log("CURRENT")
+    console.log(currentNode)
     const parentNode = this.findParent(currentNode.parentId, root);
     console.log("parentNode " + JSON.stringify(parentNode))
     const index = parentNode.children.indexOf(currentNode);
@@ -180,24 +173,21 @@ export class IntentStorage {
   }
   public findParent(id: string, node: any): any {
 
-    console.log("id " + id + " node" + node.id);
+    console.log("ENTERED " + node.id + " LOOKING FOR:" + id);
+    if (node.children == undefined || node.children.length == 0) return null;
     if (node != undefined && node.id === id) {
       return node;
     } else {
-      console.log("ELSE " + JSON.stringify(node.children));
-      for (let element in node.children) {
-        console.log("Recursive " + JSON.stringify(node.children[element].children));
-        if (node.children[element].children != undefined && node.children[element].children.length > 0) {
-          return this.findParent(id, node.children[element]);
-        } else {
-          continue;
-        }
-
-
+      // console.log("ELSE " + JSON.stringify(node.children));
+      console.log(node.children.length)
+      var i: number;
+      var result = null;
+      for (i = 0; !result && i < node.children.length; i++) {
+        //if (node.children[i].children != undefined && node.children[i].children.length > 0) {
+        result = this.findParent(id, node.children[i]);
       }
-
+      return result;
     }
-
   }
 
 }
