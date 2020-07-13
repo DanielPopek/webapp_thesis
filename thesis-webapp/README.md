@@ -1,6 +1,7 @@
 # Web service enabling design and configuration of chatbots with user's intent recognition
 
 This repository contains frontend application for the project implemented with Angular 6.0. 
+The backend part can be found in repo server_thesis
 
 ## Project description 
 
