@@ -1,27 +1,24 @@
-# ThesisWebapp
+# Web service enabling design and configuration of chatbots with user's intent recognition
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.0.
+This repository contains frontent application for the project implemented with Angular 6.0. 
 
-## Development server
+## Project description 
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+This project concerns the design and implementation of a web service allowing to create a chatbot
+conversation and to incorporate its logic within designer’s own applications. The system
+supports the recognition of the user's intents from statements in Polish. It allows the designer
+to set up an account, create the structure of the conversation expressed by the intents of the
+speech, register their own client applications, and then, thanks to the provided REST interface,
+it allows these applications to communicate with the conversation. The following services are
+perceived in terms of competition: IBM Watson Assistant, Dialogflow, ManyChat and
+Chatfuel. The system was implemented, among others using Spring Boot (backend application),
+MySQL as a database technology and Angular (frontend application for conversation
+designers). The system design was based on business analysis. Functional, non-functional
+requirements, business rules and design assumptions were included. Then a conceptual model,
+a model of use cases and prototypes of their interfaces were created. A database design and
+architecture project were carried out as well. To classify users’ input the Naive Bayes classifier
+and a combined lemmatization and stemming strategy in text pre-processing were used. As part
+of the project, the effects of implementation and the results of unit, integration and usability tests
+were also presented. The advantages of the system are: a suport for Polish language, an intuitive
+interface, a suport for event handling by client applications, the ability of attaching data through
+the context of speech, and broad possibilities of bot logic integration.
